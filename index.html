@@ -379,13 +379,13 @@
 <script>
 // ── Firebase ──
 const firebaseConfig = {
-  apiKey: "FILL_IN",
-  authDomain: "FILL_IN",
-  databaseURL: "FILL_IN",
-  projectId: "FILL_IN",
-  storageBucket: "FILL_IN",
-  messagingSenderId: "FILL_IN",
-  appId: "FILL_IN"
+  apiKey: "AIzaSyAMvbmiYc775g8W3JP19WYLscEMU2qpt_o",
+  authDomain: "daily-log-a1964.firebaseapp.com",
+  databaseURL: "https://daily-log-a1964-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "daily-log-a1964",
+  storageBucket: "daily-log-a1964.firebasestorage.app",
+  messagingSenderId: "717166699779",
+  appId: "1:717166699779:web:42ed404447c14f3833f536"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -779,15 +779,20 @@ function esc(s) {
 }
 
 // ── Init ──
-db.ref('days').on('value', snapshot => {
-  store = snapshot.val() || {};
-  const active = document.activeElement;
-  const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
-  if (!isTyping) {
-    renderDay();
-    if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
-  }
-});
+renderDay(); // Firebase 응답 전에 즉시 UI 표시
+
+db.ref('days').on('value',
+  snapshot => {
+    store = snapshot.val() || {};
+    const active = document.activeElement;
+    const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
+    if (!isTyping) {
+      renderDay();
+      if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
+    }
+  },
+  err => console.error('Firebase 오류:', err.code)
+);
 </script>
 </body>
 </html>

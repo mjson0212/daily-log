@@ -200,6 +200,12 @@
 
     .save-hint { font-size: 0.74rem; color: var(--text-muted); text-align: right; height: 1rem; transition: opacity 0.3s; }
 
+    .collapsible h2 { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; margin-bottom: 0; }
+    .collapsible h2::after { content: '▲'; font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+    .collapsible.collapsed h2::after { transform: rotate(180deg); }
+    .collapsible .collapse-body { overflow: hidden; max-height: 500px; margin-top: 0.75rem; transition: max-height 0.25s ease, margin-top 0.25s ease; }
+    .collapsible.collapsed .collapse-body { max-height: 0; margin-top: 0; }
+
     /* ── Summary ── */
     .period-label-wrap {
       display: flex;
@@ -304,15 +310,19 @@
     </div>
   </div>
 
-  <div class="card">
-    <h2>💭 오늘 생각</h2>
-    <textarea id="f-thought" placeholder="오늘 떠오른 생각, 기분, 관찰" oninput="autosave()"></textarea>
+  <div class="card collapsible collapsed" id="card-thought">
+    <h2 onclick="toggleCard('card-thought')">💭 오늘 생각</h2>
+    <div class="collapse-body">
+      <textarea id="f-thought" placeholder="오늘 떠오른 생각, 기분, 관찰" oninput="autosave()"></textarea>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>🎯 내일 딱 하나</h2>
-    <input type="text" id="f-one" placeholder="내일 이거 하나만은 꼭!!" oninput="autosave()">
-    <div class="save-hint" id="save-hint"></div>
+  <div class="card collapsible collapsed" id="card-one">
+    <h2 onclick="toggleCard('card-one')">🎯 내일 딱 하나</h2>
+    <div class="collapse-body">
+      <input type="text" id="f-one" placeholder="내일 이거 하나만은 꼭!!" oninput="autosave()">
+      <div class="save-hint" id="save-hint"></div>
+    </div>
   </div>
 </div>
 
@@ -719,6 +729,10 @@ function renderSummary() {
   document.getElementById('s-progressed').innerHTML =
     prog.length ? prog.map(([t, c]) => rankRow(t, c > 1 ? c + '회' : '완료')).join('')
                 : emptyMini('완료한 일이 아직 없어요.');
+}
+
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('collapsed');
 }
 
 function rankRow(text, cnt) {

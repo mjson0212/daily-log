@@ -300,12 +300,11 @@
     <div class="type-btns">
       <button class="btn btn-secondary btn-sm" onclick="addItem('task')">+ 할 일</button>
       <button class="btn btn-secondary btn-sm" onclick="addItem('star')">+ ⭐ 중요</button>
-      <button class="btn btn-secondary btn-sm" onclick="addItem('event')">+ 📅 일정</button>
     </div>
     <ul class="item-list" id="item-list"></ul>
     <div class="empty-state" id="item-empty">아직 적은 게 없어요.<br>오늘 할 일이나 한 일을 적어보세요.</div>
     <div class="legend">
-      <span>☐ 할 일</span><span>☑ 완료</span><span>⭐ 중요</span><span>➡️ 내일로</span><span>📅 일정</span><span>✕ 필요없어짐</span><br>
+      <span>☐ 할 일</span><span>☑ 완료</span><span>⭐ 중요</span><span>➡️ 내일로</span><span>✕ 필요없어짐</span><br>
       <span style="color:var(--text-muted)">마커를 탭하면 상태가 바뀌어요. ✕ 한 번=취소선 보존, 두 번=완전 삭제.</span>
     </div>
   </div>
@@ -341,7 +340,6 @@
       <div class="stat"><div class="stat-num" id="s-days">0</div><div class="stat-label">기록한 날</div></div>
       <div class="stat"><div class="stat-num" id="s-done">0</div><div class="stat-label">완료한 일</div></div>
       <div class="stat"><div class="stat-num" id="s-migrated">0</div><div class="stat-label">미룬 일</div></div>
-      <div class="stat"><div class="stat-num" id="s-events">0</div><div class="stat-label">일정</div></div>
     </div>
   </div>
 
@@ -463,7 +461,6 @@ function renderDate() {
 }
 
 function markerFor(it) {
-  if (it.event) return '📅';
   if (it.status === 'migrated') return '➡️';
   if (it.status === 'done') return '☑';
   if (it.status === 'cancelled') return '✕';
@@ -513,8 +510,7 @@ function addItem(type) {
     id: newId(),
     text,
     status: 'open',
-    star: type === 'star',
-    event: type === 'event'
+    star: type === 'star'
   });
   setDay(curDate, day);
   inp.value = '';
@@ -533,7 +529,6 @@ function withItem(id, fn) {
 
 function toggleDone(id) {
   withItem(id, it => {
-    if (it.event) return;
     if (it.status === 'cancelled') { it.status = 'open'; return; }
     it.status = it.status === 'done' ? 'open' : 'done';
   });
@@ -585,7 +580,7 @@ function migrateItem(id) {
     } else {
       it.status = 'migrated';
       const nd = getDay(next);
-      nd.items.push({ id: newId(), text: it.text, status: 'open', star: it.star, event: it.event });
+      nd.items.push({ id: newId(), text: it.text, status: 'open', star: it.star });
       setDay(next, nd);
     }
   });
@@ -691,13 +686,12 @@ function renderSummary() {
   const keys = curMode === 'week' ? weekKeys(curPeriodOffset) : periodMonthKeys();
   document.getElementById('period-label').textContent = getPeriodLabel();
 
-  let done = 0, migrated = 0, events = 0;
+  let done = 0, migrated = 0;
   const taskWords = [], thoughtWords = [], postponed = [], progressed = [];
 
   keys.forEach(k => {
     const d = getDay(k);
     d.items.forEach(it => {
-      if (it.event) events++;
       if (it.status === 'done') { done++; progressed.push(it.text.trim()); }
       if (it.status === 'migrated') { migrated++; postponed.push(it.text.trim()); }
       taskWords.push(...tokenize(it.text));
@@ -708,7 +702,6 @@ function renderSummary() {
   document.getElementById('s-days').textContent = keys.length;
   document.getElementById('s-done').textContent = done;
   document.getElementById('s-migrated').textContent = migrated;
-  document.getElementById('s-events').textContent = events;
 
   const kw = topCounts([...taskWords, ...thoughtWords], 12);
   document.getElementById('s-keywords').innerHTML =

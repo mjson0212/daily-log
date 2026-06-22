@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Log</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --surface2: #f0f2f5;
+      --text: #2d3748;
+      --text-sub: #718096;
+      --text-muted: #a0aec0;
+      --accent: #4a90a4;
+      --accent-light: #e8f4f8;
+      --border: #e2e8f0;
+      --star: #d69e2e;
+      --done: #38a169;
+      --migrate: #805ad5;
+      --event: #dd6b20;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 max(1rem, env(safe-area-inset-left));
+      display: flex;
+      overflow-x: auto;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+
+    nav button {
+      padding: 0 1.1rem;
+      min-height: 48px;
+      border: none;
+      background: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: inherit;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+    nav button:active { opacity: 0.7; }
+
+    .section { display: none; max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    .section.active { display: block; }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.25rem;
+    }
+
+    h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.02rem; margin-bottom: 0.75rem; }
+
+    .subtitle { font-size: 0.84rem; color: var(--text-sub); }
+
+    label { display: block; font-size: 0.83rem; color: var(--text-sub); margin-bottom: 0.35rem; }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      resize: vertical;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    textarea:focus, input:focus { outline: none; border-color: var(--accent); }
+    textarea { min-height: 70px; line-height: 1.6; }
+
+    .btn {
+      padding: 0 1.1rem;
+      min-height: 44px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:active { opacity: 0.75; }
+    .btn-secondary { background: var(--surface2); color: var(--text-sub); }
+    .btn-secondary:active { opacity: 0.7; }
+    .btn-sm { padding: 0 0.75rem; min-height: 38px; font-size: 0.82rem; }
+
+    .flex-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+    /* ── Date bar ── */
+    .datebar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .datebar .nav-arrow {
+      width: 40px; height: 40px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .datebar .nav-arrow:active { background: var(--surface2); }
+    .date-center { text-align: center; cursor: pointer; min-width: 0; }
+    .date-main { font-size: 1.2rem; font-weight: 700; }
+    .date-sub { font-size: 0.78rem; color: var(--text-sub); }
+    #date-picker { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+    .today-btn { font-size: 0.75rem; color: var(--accent); cursor: pointer; margin-left: 0.4rem; }
+
+    /* ── Add bar ── */
+    .add-input { margin-bottom: 0.6rem; }
+    .type-btns { display: flex; gap: 0.5rem; }
+    .type-btns .btn { flex: 1; }
+
+    /* ── Log items ── */
+    .item-list { list-style: none; margin-top: 0.25rem; }
+    .log-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .log-item:last-child { border-bottom: none; }
+    .marker {
+      flex-shrink: 0;
+      width: 26px;
+      font-size: 1.05rem;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1.5;
+    }
+    .item-text {
+      flex: 1;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      font-size: 0.95rem;
+      padding-top: 1px;
+    }
+    .item-text.done { text-decoration: line-through; color: var(--text-muted); }
+    .item-text.cancelled { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
+    .item-text.migrated { color: var(--text-muted); }
+    .item-actions { display: flex; gap: 0.2rem; flex-shrink: 0; }
+    .icon-act {
+      width: 30px; height: 30px;
+      border: none; background: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      opacity: 0.55;
+    }
+    .icon-act:active { background: var(--surface2); opacity: 1; }
+    .icon-act.on { opacity: 1; }
+
+    .empty-state { text-align: center; padding: 1.5rem 1rem; color: var(--text-muted); font-size: 0.86rem; line-height: 1.9; }
+
+    .legend { font-size: 0.76rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.8; }
+    .legend span { white-space: nowrap; margin-right: 0.7rem; }
+
+    .save-hint { font-size: 0.74rem; color: var(--text-muted); text-align: right; height: 1rem; transition: opacity 0.3s; }
+
+    /* ── Summary ── */
+    .period-label-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .stat {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 0.875rem;
+      text-align: center;
+    }
+    .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+    .stat-label { font-size: 0.76rem; color: var(--text-sub); }
+
+    .kw { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .kw span {
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+    .kw span small { color: var(--text-muted); font-weight: 600; margin-left: 0.2rem; }
+
+    .rank-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .rank-row:last-child { border-bottom: none; }
+    .rank-row .cnt { color: var(--text-muted); font-size: 0.8rem; flex-shrink: 0; margin-left: 0.6rem; }
+    .rank-text { word-break: break-word; overflow-wrap: anywhere; }
+
+    /* ── Breathing ── */
+    #breathe-wrap { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 0; gap: 1.25rem; }
+    #breathe-circle {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      border: 3px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: var(--accent); font-weight: 600;
+      transition: transform 4s ease-in-out, background 4s ease-in-out;
+      user-select: none;
+    }
+    #breathe-guide { font-size: 0.93rem; color: var(--text-sub); text-align: center; }
+    #breathe-counter { font-size: 1.8rem; font-weight: 300; color: var(--text); }
+
+    input[type="range"] { width: 100%; accent-color: var(--accent); height: 36px; cursor: pointer; }
+
+    .step { background: var(--surface2); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.6rem; word-break: keep-all; }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; background: var(--accent); color: white;
+      border-radius: 50%; font-size: 0.72rem; font-weight: 700;
+      margin-right: 0.45rem; flex-shrink: 0; vertical-align: middle;
+    }
+
+    @media (max-width: 480px) {
+      .section { padding: 1.1rem 0.875rem 4rem; }
+      .card { padding: 1.05rem; }
+      h1 { font-size: 1.2rem; }
+      .item-actions { gap: 0; }
+      #breathe-circle { width: 120px; height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <button class="active" onclick="goTab(0)">오늘</button>
+  <button onclick="goTab(1)">이번주</button>
+  <button onclick="goTab(2)">이번달</button>
+  <button onclick="goTab(3)">호흡</button>
+</nav>
+
+<!-- ─── 오늘 (Daily Log) ─── -->
+<div id="today" class="section active">
+  <div class="datebar">
+    <button class="nav-arrow" onclick="shiftDay(-1)">‹</button>
+    <div class="date-center" onclick="openPicker()">
+      <div class="date-main" id="date-main">—</div>
+      <div class="date-sub" id="date-sub">—<span class="today-btn" onclick="event.stopPropagation();goToday()">오늘로</span></div>
+      <input type="date" id="date-picker" onchange="pickDate(this.value)">
+    </div>
+    <button class="nav-arrow" onclick="shiftDay(1)">›</button>
+  </div>
+
+  <div class="card">
+    <h2>✅ 할 일 · 한 일</h2>
+    <input type="text" class="add-input" id="item-input" placeholder="할 일을 입력하세요" onkeydown="if(event.key==='Enter')addItem('task')">
+    <div class="type-btns">
+      <button class="btn btn-secondary btn-sm" onclick="addItem('task')">+ 할 일</button>
+      <button class="btn btn-secondary btn-sm" onclick="addItem('star')">+ ⭐ 중요</button>
+      <button class="btn btn-secondary btn-sm" onclick="addItem('event')">+ 📅 일정</button>
+    </div>
+    <ul class="item-list" id="item-list"></ul>
+    <div class="empty-state" id="item-empty">아직 적은 게 없어요.<br>오늘 할 일이나 한 일을 적어보세요.</div>
+    <div class="legend">
+      <span>☐ 할 일</span><span>☑ 완료</span><span>⭐ 중요</span><span>➡️ 내일로</span><span>📅 일정</span><span>✕ 필요없어짐</span><br>
+      <span style="color:var(--text-muted)">마커를 탭하면 상태가 바뀌어요. ✕ 한 번=취소선 보존, 두 번=완전 삭제.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💭 오늘 생각</h2>
+    <textarea id="f-thought" placeholder="오늘 떠오른 생각, 기분, 관찰" oninput="autosave()"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>🎯 내일 딱 하나</h2>
+    <input type="text" id="f-one" placeholder="내일 이거 하나만은 꼭!!" oninput="autosave()">
+    <div class="save-hint" id="save-hint"></div>
+  </div>
+</div>
+
+<!-- ─── 이번주 / 이번달 (Summary) ─── -->
+<div id="summary" class="section">
+  <div class="datebar" style="margin-bottom:1.25rem">
+    <button class="nav-arrow" onclick="shiftPeriod(-1)">‹</button>
+    <div class="date-center" style="cursor:default">
+      <div class="date-main" id="period-label" style="font-size:1.05rem">—</div>
+    </div>
+    <button class="nav-arrow" onclick="shiftPeriod(1)">›</button>
+  </div>
+
+  <div class="card">
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-num" id="s-days">0</div><div class="stat-label">기록한 날</div></div>
+      <div class="stat"><div class="stat-num" id="s-done">0</div><div class="stat-label">완료한 일</div></div>
+      <div class="stat"><div class="stat-num" id="s-migrated">0</div><div class="stat-label">미룬 일</div></div>
+      <div class="stat"><div class="stat-num" id="s-events">0</div><div class="stat-label">일정</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔑 가장 많이 나온 키워드</h2>
+    <div class="kw" id="s-keywords"></div>
+  </div>
+
+  <div class="card">
+    <h2>↪️ 가장 자주 미룬 일</h2>
+    <div id="s-postponed"></div>
+  </div>
+
+  <div class="card">
+    <h2>💭 가장 많이 생각한 주제</h2>
+    <div class="kw" id="s-topics"></div>
+  </div>
+
+  <div class="card">
+    <h2>🚀 실제로 진행된 일</h2>
+    <div id="s-progressed"></div>
+  </div>
+</div>
+
+<!-- ─── 호흡 ─── -->
+<div id="breathe" class="section">
+  <h1>호흡</h1>
+  <p class="subtitle" style="margin-bottom:1.25rem">집중이 흐트러지는 것은 실패가 아니다. 알아차리고 돌아오는 것이 훈련이다.</p>
+
+  <div class="card">
+    <div id="breathe-wrap">
+      <div id="breathe-circle">준비</div>
+      <div id="breathe-guide">아래 버튼을 눌러 시작하세요</div>
+      <div id="breathe-counter" style="display:none"></div>
+    </div>
+    <div class="flex-row" style="justify-content:center;">
+      <button class="btn btn-primary" id="btn-start" onclick="startBreathe()">시작</button>
+      <button class="btn btn-secondary" id="btn-stop" onclick="stopBreathe()" style="display:none">중단</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// ── Firebase ──
+const firebaseConfig = {
+  apiKey: "FILL_IN",
+  authDomain: "FILL_IN",
+  databaseURL: "FILL_IN",
+  projectId: "FILL_IN",
+  storageBucket: "FILL_IN",
+  messagingSenderId: "FILL_IN",
+  appId: "FILL_IN"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ── In-memory store (Firebase로부터 동기화) ──
+let store = {};
+
+// ── Navigation ──
+const TAB_SECTIONS = ['today', 'summary', 'summary', 'breathe'];
+const TAB_MODES    = [null,    'week',    'month',   null];
+let curTab = 0;
+
+function goTab(i) {
+  curTab = i;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(TAB_SECTIONS[i]).classList.add('active');
+  document.querySelectorAll('nav button')[i].classList.add('active');
+  if (TAB_MODES[i]) {
+    curMode = TAB_MODES[i];
+    curPeriodOffset = 0;
+  }
+  if (TAB_SECTIONS[i] === 'summary') renderSummary();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ── Date helpers ──
+function p(n) { return String(n).padStart(2, '0'); }
+function toKey(d) { return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function fromKey(k) { const [y,m,dd] = k.split('-').map(Number); return new Date(y, m-1, dd); }
+const WEEK = ['일','월','화','수','목','금','토'];
+
+let curDate = toKey(new Date());
+
+// ── Day storage (Firebase-backed) ──
+function getDay(k) {
+  const d = store[k];
+  return d ? JSON.parse(JSON.stringify(d)) : blankDay();
+}
+function blankDay() { return { items: [], thought: '', one: '' }; }
+function dayEmpty(d) {
+  return (!d.items || d.items.length === 0) &&
+         !(d.thought || '').trim() && !(d.one || '').trim();
+}
+function setDay(k, data) {
+  if (dayEmpty(data)) {
+    delete store[k];
+    db.ref('days/' + k).remove();
+  } else {
+    store[k] = data;
+    db.ref('days/' + k).set(data);
+  }
+}
+
+// ── Render day ──
+function renderDate() {
+  const d = fromKey(curDate);
+  const today = toKey(new Date());
+  document.getElementById('date-main').textContent =
+    `${d.getMonth()+1}월 ${d.getDate()}일 (${WEEK[d.getDay()]})`;
+  let sub = `${d.getFullYear()}`;
+  if (curDate === today) sub = '오늘 · ' + sub;
+  document.getElementById('date-sub').innerHTML =
+    sub + `<span class="today-btn" onclick="event.stopPropagation();goToday()">오늘로</span>`;
+}
+
+function markerFor(it) {
+  if (it.event) return '📅';
+  if (it.status === 'migrated') return '➡️';
+  if (it.status === 'done') return '☑';
+  if (it.status === 'cancelled') return '✕';
+  if (it.star) return '⭐';
+  return '☐';
+}
+
+function renderDay() {
+  renderDate();
+  const day = getDay(curDate);
+  const list = document.getElementById('item-list');
+  list.innerHTML = '';
+  document.getElementById('item-empty').style.display = day.items.length ? 'none' : '';
+
+  day.items.forEach(it => {
+    const li = document.createElement('li');
+    li.className = 'log-item';
+    const textCls = it.status === 'done' ? 'done' : it.status === 'cancelled' ? 'cancelled' : (it.status === 'migrated' ? 'migrated' : '');
+    li.dataset.id = it.id;
+    li.innerHTML =
+      `<div class="marker" onclick="toggleDone('${it.id}')">${markerFor(it)}</div>` +
+      `<div class="item-text ${textCls}">${esc(it.text)}</div>` +
+      `<div class="item-actions">` +
+        `<button class="icon-act" title="수정" onclick="editItem('${it.id}')">✏️</button>` +
+        `<button class="icon-act ${it.star?'on':''}" title="중요" onclick="toggleStar('${it.id}')">⭐</button>` +
+        `<button class="icon-act ${it.status==='migrated'?'on':''}" title="내일로 이동" onclick="migrateItem('${it.id}')">➡️</button>` +
+        `<button class="icon-act" title="필요없어짐 / 두번탭=삭제" onclick="delItem('${it.id}')">✕</button>` +
+      `</div>`;
+    list.appendChild(li);
+  });
+
+  const active = document.activeElement;
+  if (active !== document.getElementById('f-thought'))
+    document.getElementById('f-thought').value = day.thought || '';
+  if (active !== document.getElementById('f-one'))
+    document.getElementById('f-one').value = day.one || '';
+}
+
+function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+function addItem(type) {
+  const inp = document.getElementById('item-input');
+  const text = inp.value.trim();
+  if (!text) { inp.focus(); return; }
+  const day = getDay(curDate);
+  day.items.push({
+    id: newId(),
+    text,
+    status: 'open',
+    star: type === 'star',
+    event: type === 'event'
+  });
+  setDay(curDate, day);
+  inp.value = '';
+  renderDay();
+  inp.focus();
+}
+
+function withItem(id, fn) {
+  const day = getDay(curDate);
+  const it = day.items.find(x => x.id === id);
+  if (!it) return;
+  fn(it, day);
+  setDay(curDate, day);
+  renderDay();
+}
+
+function toggleDone(id) {
+  withItem(id, it => {
+    if (it.event) return;
+    if (it.status === 'cancelled') { it.status = 'open'; return; }
+    it.status = it.status === 'done' ? 'open' : 'done';
+  });
+}
+function toggleStar(id) { withItem(id, it => { it.star = !it.star; }); }
+function delItem(id) {
+  const day = getDay(curDate);
+  const it = day.items.find(x => x.id === id);
+  if (!it) return;
+  if (it.status !== 'cancelled') {
+    it.status = 'cancelled';
+  } else {
+    day.items = day.items.filter(x => x.id !== id);
+  }
+  setDay(curDate, day);
+  renderDay();
+}
+
+function editItem(id) {
+  const day = getDay(curDate);
+  const it = day.items.find(x => x.id === id);
+  if (!it) return;
+  const li = document.querySelector(`[data-id="${id}"]`);
+  const textEl = li.querySelector('.item-text');
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.value = it.text;
+  inp.style.cssText = 'flex:1;min-width:0;font-size:0.95rem;padding:2px 6px;margin-right:0.3rem;';
+  textEl.replaceWith(inp);
+  inp.focus();
+  inp.select();
+  const save = () => {
+    const v = inp.value.trim();
+    if (v && v !== it.text) { it.text = v; setDay(curDate, day); }
+    renderDay();
+  };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') renderDay(); });
+  inp.addEventListener('blur', save);
+}
+
+function migrateItem(id) {
+  withItem(id, (it, day) => {
+    const next = toKey(new Date(fromKey(curDate).getTime() + 86400000));
+    if (it.status === 'migrated') {
+      it.status = 'open';
+      const nd = getDay(next);
+      nd.items = nd.items.filter(x => x.text !== it.text);
+      setDay(next, nd);
+    } else {
+      it.status = 'migrated';
+      const nd = getDay(next);
+      nd.items.push({ id: newId(), text: it.text, status: 'open', star: it.star, event: it.event });
+      setDay(next, nd);
+    }
+  });
+}
+
+// ── Autosave free-text fields ──
+let saveT = null;
+function autosave() {
+  const day = getDay(curDate);
+  day.thought = document.getElementById('f-thought').value;
+  day.one = document.getElementById('f-one').value;
+  setDay(curDate, day);
+  const hint = document.getElementById('save-hint');
+  hint.textContent = '저장됨 ✓';
+  hint.style.opacity = '1';
+  clearTimeout(saveT);
+  saveT = setTimeout(() => { hint.style.opacity = '0'; }, 1200);
+}
+
+// ── Date navigation ──
+function shiftDay(n) {
+  curDate = toKey(new Date(fromKey(curDate).getTime() + n * 86400000));
+  renderDay();
+}
+function goToday() { curDate = toKey(new Date()); renderDay(); }
+function openPicker() {
+  const pk = document.getElementById('date-picker');
+  pk.value = curDate;
+  if (pk.showPicker) { try { pk.showPicker(); return; } catch(e){} }
+  pk.focus(); pk.click();
+}
+function pickDate(v) { if (v) { curDate = v; renderDay(); } }
+
+// ── Summary ──
+const STOP = new Set(['그리고','그러나','하지만','그래서','이것','저것','오늘','내일','어제','정도','관련','확인','하기','했다','한다','부분','진짜','약간','조금','다시','너무','이거','저거','그거','계속','때문','일단','이번','저번','그냥','해서','하고','에서','으로','이런','저런','어떤','매우']);
+
+let curMode = 'week';
+let curPeriodOffset = 0;
+
+function monthKeys(ym) {
+  return Object.keys(store).filter(k => k.startsWith(ym) && !dayEmpty(store[k])).sort();
+}
+
+function weekKeys(offset) {
+  const today = new Date();
+  const dow = today.getDay();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - dow + offset * 7);
+  sunday.setHours(0, 0, 0, 0);
+  const keys = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sunday);
+    d.setDate(sunday.getDate() + i);
+    const k = toKey(d);
+    if (!dayEmpty(getDay(k))) keys.push(k);
+  }
+  return keys.sort();
+}
+
+function periodMonthKeys() {
+  const today = new Date();
+  const d = new Date(today.getFullYear(), today.getMonth() + curPeriodOffset, 1);
+  const ym = `${d.getFullYear()}-${p(d.getMonth()+1)}`;
+  return monthKeys(ym);
+}
+
+function getPeriodLabel() {
+  const today = new Date();
+  if (curMode === 'week') {
+    const dow = today.getDay();
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - dow + curPeriodOffset * 7);
+    const saturday = new Date(sunday);
+    saturday.setDate(sunday.getDate() + 6);
+    const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
+    return `${sunday.getFullYear()}년 ${fmt(sunday)}~${fmt(saturday)}`;
+  } else {
+    const d = new Date(today.getFullYear(), today.getMonth() + curPeriodOffset, 1);
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월`;
+  }
+}
+
+function shiftPeriod(n) {
+  curPeriodOffset += n;
+  renderSummary();
+}
+
+function tokenize(text) {
+  return (text || '')
+    .replace(/[^가-힣a-zA-Z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .map(w => w.trim())
+    .filter(w => w.length >= 2 && !STOP.has(w));
+}
+
+function topCounts(arr, n) {
+  const m = {};
+  arr.forEach(x => { m[x] = (m[x] || 0) + 1; });
+  return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n);
+}
+
+function renderSummary() {
+  const keys = curMode === 'week' ? weekKeys(curPeriodOffset) : periodMonthKeys();
+  document.getElementById('period-label').textContent = getPeriodLabel();
+
+  let done = 0, migrated = 0, events = 0;
+  const taskWords = [], thoughtWords = [], postponed = [], progressed = [];
+
+  keys.forEach(k => {
+    const d = getDay(k);
+    d.items.forEach(it => {
+      if (it.event) events++;
+      if (it.status === 'done') { done++; progressed.push(it.text.trim()); }
+      if (it.status === 'migrated') { migrated++; postponed.push(it.text.trim()); }
+      taskWords.push(...tokenize(it.text));
+    });
+    thoughtWords.push(...tokenize(d.thought));
+  });
+
+  document.getElementById('s-days').textContent = keys.length;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-migrated').textContent = migrated;
+  document.getElementById('s-events').textContent = events;
+
+  const kw = topCounts([...taskWords, ...thoughtWords], 12);
+  document.getElementById('s-keywords').innerHTML =
+    kw.length ? kw.map(([w, c]) => `<span>${esc(w)}<small>${c}</small></span>`).join('')
+              : emptyMini('아직 키워드가 없어요.');
+
+  const pp = topCounts(postponed, 8);
+  document.getElementById('s-postponed').innerHTML =
+    pp.length ? pp.map(([t, c]) => rankRow(t, c + '회')).join('')
+              : emptyMini('미룬 일이 없어요. 잘했어요!');
+
+  const tp = topCounts(thoughtWords, 10);
+  document.getElementById('s-topics').innerHTML =
+    tp.length ? tp.map(([w, c]) => `<span>${esc(w)}<small>${c}</small></span>`).join('')
+              : emptyMini('생각/메모 기록이 없어요.');
+
+  const prog = topCounts(progressed, 12);
+  document.getElementById('s-progressed').innerHTML =
+    prog.length ? prog.map(([t, c]) => rankRow(t, c > 1 ? c + '회' : '완료')).join('')
+                : emptyMini('완료한 일이 아직 없어요.');
+}
+
+function rankRow(text, cnt) {
+  return `<div class="rank-row"><div class="rank-text">${esc(text)}</div><div class="cnt">${esc(cnt)}</div></div>`;
+}
+function emptyMini(msg) { return `<div class="empty-state" style="padding:0.75rem">${msg}</div>`; }
+
+// ── Breathing ──
+let bTimer = null, bCycle = 0, bPhase = 0, bTotal = 0;
+
+function startBreathe() {
+  bTotal = 8;
+  bCycle = 0; bPhase = 0;
+  document.getElementById('btn-start').style.display = 'none';
+  document.getElementById('btn-stop').style.display = '';
+  document.getElementById('breathe-counter').style.display = '';
+  runPhase();
+}
+function runPhase() {
+  const circle = document.getElementById('breathe-circle');
+  const guide = document.getElementById('breathe-guide');
+  const counter = document.getElementById('breathe-counter');
+  if (bCycle >= bTotal) { stopBreathe(); circle.textContent = '완료'; guide.textContent = '훈련을 잘 마쳤습니다.'; return; }
+  counter.textContent = `${bCycle + 1} / ${bTotal}`;
+  if (bPhase === 0) {
+    circle.textContent = '들이쉬기';
+    circle.style.transform = 'scale(1.5)';
+    circle.style.background = '#daeef6';
+    guide.textContent = '천천히 들이쉬세요 (4초)';
+    bTimer = setTimeout(() => { bPhase = 1; runPhase(); }, 4000);
+  } else if (bPhase === 1) {
+    circle.textContent = '유지';
+    guide.textContent = '잠깐 유지 (2초)';
+    bTimer = setTimeout(() => { bPhase = 2; runPhase(); }, 2000);
+  } else {
+    circle.textContent = '내쉬기';
+    circle.style.transform = 'scale(1)';
+    circle.style.background = 'var(--accent-light)';
+    guide.textContent = '천천히 내쉬세요 (4초)';
+    bTimer = setTimeout(() => { bCycle++; bPhase = 0; runPhase(); }, 4000);
+  }
+}
+function stopBreathe() {
+  if (bTimer) { clearTimeout(bTimer); bTimer = null; }
+  const circle = document.getElementById('breathe-circle');
+  circle.textContent = '준비';
+  circle.style.transform = 'scale(1)';
+  circle.style.background = 'var(--accent-light)';
+  document.getElementById('breathe-guide').textContent = '아래 버튼을 눌러 시작하세요';
+  document.getElementById('btn-start').style.display = '';
+  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('breathe-counter').style.display = 'none';
+}
+
+// ── Util ──
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── Init ──
+db.ref('days').on('value', snapshot => {
+  store = snapshot.val() || {};
+  const active = document.activeElement;
+  const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
+  if (!isTyping) {
+    renderDay();
+    if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
+  }
+});
+</script>
+</body>
+</html>

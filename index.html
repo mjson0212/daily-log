@@ -249,6 +249,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 0.9rem; color: var(--accent); font-weight: 600;
       transition: transform 4s ease-in-out, background 4s ease-in-out;
+      will-change: transform;
       user-select: none;
     }
     #breathe-guide { font-size: 0.93rem; color: var(--text-sub); text-align: center; }
@@ -749,12 +750,14 @@ function runPhase() {
   if (bCycle >= bTotal) { stopBreathe(); circle.textContent = '완료'; guide.textContent = '수고했어요.'; return; }
   counter.textContent = `${bCycle + 1} / ${bTotal}`;
   if (bPhase === 0) {
+    circle.style.transition = 'transform 4s ease-in-out, background 4s ease-in-out';
     circle.textContent = '들이쉬기';
     circle.style.transform = 'scale(1.5)';
     circle.style.background = '#daeef6';
     guide.textContent = '코로 들이쉬세요 (4초)';
     bTimer = setTimeout(() => { bPhase = 1; runPhase(); }, 4000);
   } else {
+    circle.style.transition = 'transform 8s ease-in-out, background 8s ease-in-out';
     circle.textContent = '내쉬기';
     circle.style.transform = 'scale(1)';
     circle.style.background = 'var(--accent-light)';

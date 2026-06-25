@@ -265,36 +265,6 @@
       margin-right: 0.45rem; flex-shrink: 0; vertical-align: middle;
     }
 
-    /* ── Gate ── */
-    #gate {
-      position: fixed; inset: 0;
-      background: var(--bg);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 999; padding: 1.5rem;
-    }
-    #gate .gate-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.5rem;
-      width: 100%; max-width: 340px;
-      text-align: center;
-    }
-    #gate h1 { margin-bottom: 0.4rem; }
-    #gate .gate-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 1.5rem; }
-    #gate input { margin-bottom: 0.75rem; text-align: center; font-size: 1.1rem; letter-spacing: 0.1em; }
-    #gate .gate-btns { display: flex; flex-direction: column; gap: 0.5rem; }
-    #gate .new-code-link { font-size: 0.82rem; color: var(--accent); cursor: pointer; margin-top: 0.75rem; display: block; }
-
-    .code-chip {
-      font-size: 0.75rem; color: var(--text-muted);
-      cursor: pointer; padding: 0 0.5rem;
-      border-left: 1px solid var(--border);
-      margin-left: auto; white-space: nowrap;
-      display: flex; align-items: center; min-height: 48px;
-    }
-    .code-chip:active { color: var(--accent); }
-
     @media (max-width: 480px) {
       .section { padding: 1.1rem 0.875rem 4rem; }
       .card { padding: 1.05rem; }
@@ -306,27 +276,11 @@
 </head>
 <body>
 
-<!-- ─── Gate (코드 입력) ─── -->
-<div id="gate">
-  <div class="gate-card">
-    <h1>Daily Log</h1>
-    <p class="gate-sub">코드를 입력하면 내 데이터로 연결돼요</p>
-    <input type="text" id="code-input" placeholder="코드 입력" maxlength="20"
-      oninput="this.value=this.value.toUpperCase()"
-      onkeydown="if(event.key==='Enter')enterCode()">
-    <div class="gate-btns">
-      <button class="btn btn-primary" onclick="enterCode()">입장</button>
-    </div>
-    <span class="new-code-link" onclick="genCode()">코드 없으면 여기서 생성 →</span>
-  </div>
-</div>
-
 <nav>
   <button class="active" onclick="goTab(0)">오늘</button>
   <button onclick="goTab(1)">호흡</button>
   <button onclick="goTab(2)">이번주</button>
   <button onclick="goTab(3)">이번달</button>
-  <span class="code-chip" onclick="changeCode()" title="코드 변경">🔑 <span id="nav-code"></span></span>
 </nav>
 
 <!-- ─── 오늘 (Daily Log) ─── -->
@@ -443,35 +397,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ── User code ──
-let userCode = localStorage.getItem('user_code') || '';
-
-function daysRef() { return db.ref('users/' + userCode + '/days'); }
-
-function genCode() {
-  const code = Math.random().toString(36).slice(2, 8).toUpperCase();
-  document.getElementById('code-input').value = code;
-  document.getElementById('code-input').focus();
-}
-
-function enterCode() {
-  const v = document.getElementById('code-input').value.trim().toUpperCase();
-  if (!v) return;
-  userCode = v;
-  localStorage.setItem('user_code', userCode);
-  document.getElementById('gate').style.display = 'none';
-  document.getElementById('nav-code').textContent = userCode;
-  startApp();
-}
-
-function changeCode() {
-  if (!confirm('코드를 변경하면 이 기기에서 현재 데이터 연결이 끊겨요.\n계속할까요?')) return;
-  localStorage.removeItem('user_code');
-  userCode = '';
-  document.getElementById('code-input').value = '';
-  document.getElementById('gate').style.display = 'flex';
-}
-
 // ── In-memory store (Firebase로부터 동기화) ──
 let store = {};
 
@@ -515,10 +440,10 @@ function dayEmpty(d) {
 function setDay(k, data) {
   if (dayEmpty(data)) {
     delete store[k];
-    daysRef().child(k).remove();
+    db.ref('days/' + k).remove();
   } else {
     store[k] = data;
-    daysRef().child(k).set(data);
+    db.ref('days/' + k).set(data);
   }
 }
 
@@ -858,30 +783,20 @@ function esc(s) {
 }
 
 // ── Init ──
-let fbListener = null;
+renderDay(); // Firebase 응답 전에 즉시 UI 표시
 
-function startApp() {
-  document.getElementById('nav-code').textContent = userCode;
-  renderDay();
-  if (fbListener) fbListener(); // 기존 리스너 해제
-  fbListener = daysRef().on('value',
-    snapshot => {
-      store = snapshot.val() || {};
-      const active = document.activeElement;
-      const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
-      if (!isTyping) {
-        renderDay();
-        if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
-      }
-    },
-    err => console.error('Firebase 오류:', err.code)
-  );
-}
-
-if (userCode) {
-  document.getElementById('gate').style.display = 'none';
-  startApp();
-}
+db.ref('days').on('value',
+  snapshot => {
+    store = snapshot.val() || {};
+    const active = document.activeElement;
+    const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
+    if (!isTyping) {
+      renderDay();
+      if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
+    }
+  },
+  err => console.error('Firebase 오류:', err.code)
+);
 </script>
 </body>
 </html>

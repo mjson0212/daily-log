@@ -277,9 +277,9 @@
 
 <nav>
   <button class="active" onclick="goTab(0)">오늘</button>
-  <button onclick="goTab(1)">이번주</button>
-  <button onclick="goTab(2)">이번달</button>
-  <button onclick="goTab(3)">호흡</button>
+  <button onclick="goTab(1)">호흡</button>
+  <button onclick="goTab(2)">이번주</button>
+  <button onclick="goTab(3)">이번달</button>
 </nav>
 
 <!-- ─── 오늘 (Daily Log) ─── -->
@@ -366,8 +366,6 @@
 
 <!-- ─── 호흡 ─── -->
 <div id="breathe" class="section">
-  <h1>호흡</h1>
-  <p class="subtitle" style="margin-bottom:1.25rem">집중이 흐트러지는 것은 실패가 아니다. 알아차리고 돌아오는 것이 훈련이다.</p>
 
   <div class="card">
     <div id="breathe-wrap">
@@ -402,8 +400,8 @@ const db = firebase.database();
 let store = {};
 
 // ── Navigation ──
-const TAB_SECTIONS = ['today', 'summary', 'summary', 'breathe'];
-const TAB_MODES    = [null,    'week',    'month',   null];
+const TAB_SECTIONS = ['today', 'breathe', 'summary', 'summary'];
+const TAB_MODES    = [null,    null,      'week',    'month'];
 let curTab = 0;
 
 function goTab(i) {
@@ -748,24 +746,20 @@ function runPhase() {
   const circle = document.getElementById('breathe-circle');
   const guide = document.getElementById('breathe-guide');
   const counter = document.getElementById('breathe-counter');
-  if (bCycle >= bTotal) { stopBreathe(); circle.textContent = '완료'; guide.textContent = '훈련을 잘 마쳤습니다.'; return; }
+  if (bCycle >= bTotal) { stopBreathe(); circle.textContent = '완료'; guide.textContent = '수고했어요.'; return; }
   counter.textContent = `${bCycle + 1} / ${bTotal}`;
   if (bPhase === 0) {
     circle.textContent = '들이쉬기';
     circle.style.transform = 'scale(1.5)';
     circle.style.background = '#daeef6';
-    guide.textContent = '천천히 들이쉬세요 (4초)';
+    guide.textContent = '코로 들이쉬세요 (4초)';
     bTimer = setTimeout(() => { bPhase = 1; runPhase(); }, 4000);
-  } else if (bPhase === 1) {
-    circle.textContent = '유지';
-    guide.textContent = '잠깐 유지 (2초)';
-    bTimer = setTimeout(() => { bPhase = 2; runPhase(); }, 2000);
   } else {
     circle.textContent = '내쉬기';
     circle.style.transform = 'scale(1)';
     circle.style.background = 'var(--accent-light)';
-    guide.textContent = '천천히 내쉬세요 (4초)';
-    bTimer = setTimeout(() => { bCycle++; bPhase = 0; runPhase(); }, 4000);
+    guide.textContent = '입으로 천천히 내쉬세요 (8초)';
+    bTimer = setTimeout(() => { bCycle++; bPhase = 0; runPhase(); }, 8000);
   }
 }
 function stopBreathe() {

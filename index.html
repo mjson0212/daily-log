@@ -169,6 +169,28 @@
       user-select: none;
       line-height: 1.5;
     }
+    .drag-handle {
+      flex-shrink: 0;
+      width: 36px;
+      align-self: stretch;
+      margin: -0.6rem -0.4rem -0.6rem -0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+    .drag-handle svg { display: block; opacity: 0.7; pointer-events: none; }
+    .log-item.dragging {
+      position: relative;
+      z-index: 5;
+      background: var(--surface);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 8px;
+    }
+    .log-item.dragging .drag-handle { cursor: grabbing; opacity: 1; color: var(--accent); }
     .item-text {
       flex: 1;
       min-width: 0;
@@ -268,9 +290,6 @@
     /* ── 오늘의 감정 ── */
     #card-emotion .collapse-body { max-height: none; }
     #card-emotion.collapsed .collapse-body { max-height: 0; }
-    .emo-summary { font-size: 0.84rem; color: var(--text-sub); margin-top: 0.3rem; cursor: pointer; word-break: keep-all; overflow-wrap: anywhere; }
-    .emo-summary.empty { color: var(--text-muted); }
-    .collapsible:not(.collapsed) .emo-summary { display: none; }
     .emo-guide { font-size: 0.84rem; color: var(--text-sub); margin-bottom: 0.75rem; word-break: keep-all; }
     .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
     .chip {
@@ -390,7 +409,6 @@
 
   <div class="card collapsible" id="card-emotion">
     <h2 onclick="toggleCard('card-emotion')">🌿 오늘의 감정</h2>
-    <div class="emo-summary" id="emo-summary" onclick="toggleCard('card-emotion')"></div>
     <div class="collapse-body">
       <p class="emo-guide">지금 마음에 가까운 단어를 골라보세요. 여러 개 골라도 괜찮아요.</p>
       <div class="chips" id="emo-chips"></div>
@@ -436,6 +454,12 @@
   </div>
 
   <div class="card">
+    <h2>🌿 자주 머문 마음</h2>
+    <div class="kw" id="s-emotions"></div>
+    <div id="s-emo-days" style="margin-top:0.75rem"></div>
+  </div>
+
+  <div class="card">
     <h2>🔑 가장 많이 나온 키워드</h2>
     <div class="kw" id="s-keywords"></div>
   </div>
@@ -443,11 +467,6 @@
   <div class="card">
     <h2>↪️ 가장 자주 미룬 일</h2>
     <div id="s-postponed"></div>
-  </div>
-
-  <div class="card">
-    <h2>💭 가장 많이 생각한 주제</h2>
-    <div class="kw" id="s-topics"></div>
   </div>
 
   <div class="card">
@@ -593,6 +612,9 @@ function renderDay() {
         `<button class="icon-act ${it.star?'on':''}" title="중요" onclick="toggleStar('${it.id}')">⭐</button>` +
         `<button class="icon-act ${it.status==='migrated'?'on':''}" title="내일로 이동" onclick="migrateItem('${it.id}')">➡️</button>` +
         `<button class="icon-act" title="필요없어짐 / 두번탭=삭제" onclick="delItem('${it.id}')">✕</button>` +
+      `</div>` +
+      `<div class="drag-handle" title="끌어서 순서 바꾸기" aria-label="끌어서 순서 바꾸기" onpointerdown="dragStart(event)">` +
+        `<svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><path d="M0 1H18M0 7H18M0 13H18" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges"/></svg>` +
       `</div>`;
     list.appendChild(li);
   });
@@ -672,6 +694,56 @@ function editItem(id) {
   };
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') renderDay(); });
   inp.addEventListener('blur', save);
+}
+
+// ── 드래그로 순서 바꾸기 (손잡이를 잡았을 때만) ──
+let drag = null;
+function dragStart(ev) {
+  if (ev.button !== undefined && ev.button !== 0) return;
+  const li = ev.target.closest('.log-item');
+  if (!li) return;
+  ev.preventDefault();
+  const handle = ev.currentTarget;
+  try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+  const order = [...document.querySelectorAll('#item-list .log-item')].map(x => x.dataset.id).join(',');
+  drag = { li, handle, startY: ev.clientY, baseTop: li.getBoundingClientRect().top, order, t: 0 };
+  li.classList.add('dragging');
+  handle.addEventListener('pointermove', dragMove);
+  handle.addEventListener('pointerup', dragEnd);
+  handle.addEventListener('pointercancel', dragEnd);
+}
+function dragMove(ev) {
+  if (!drag) return;
+  const { li } = drag;
+  const list = li.parentNode;
+  const y = ev.clientY;
+  // 포인터가 지나간 이웃 항목의 가운데를 기준으로 자리 바꾸기
+  const prev = li.previousElementSibling, next = li.nextElementSibling;
+  // (잡고 있는 li는 옮기지 않고 이웃을 옮겨야 포인터 추적이 끊기지 않음)
+  const mid = el => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; };
+  if (prev && y < mid(prev)) list.insertBefore(prev, li.nextSibling);
+  else if (next && y > mid(next)) list.insertBefore(next, li);
+  // 손가락을 따라오도록 살짝 이동
+  const naturalTop = li.getBoundingClientRect().top - drag.t;
+  drag.t = (y - (drag.startY - drag.baseTop)) - naturalTop;
+  li.style.transform = `translateY(${drag.t}px)`;
+}
+function dragEnd() {
+  if (!drag) return;
+  const { li, handle, order } = drag;
+  handle.removeEventListener('pointermove', dragMove);
+  handle.removeEventListener('pointerup', dragEnd);
+  handle.removeEventListener('pointercancel', dragEnd);
+  li.classList.remove('dragging');
+  li.style.transform = '';
+  drag = null;
+  const ids = [...document.querySelectorAll('#item-list .log-item')].map(x => x.dataset.id);
+  if (ids.join(',') === order) return;
+  const day = getDay(curDate);
+  const pos = new Map(ids.map((id, i) => [id, i]));
+  day.items.sort((a, b) => (pos.has(a.id) ? pos.get(a.id) : 1e9) - (pos.has(b.id) ? pos.get(b.id) : 1e9));
+  setDay(curDate, day);
+  renderDay();
 }
 
 function migrateItem(id) {
@@ -807,6 +879,24 @@ function renderSummary() {
   document.getElementById('s-done').textContent = done;
   document.getElementById('s-migrated').textContent = migrated;
 
+  // 감정: 저장된 기록만, 긍정/부정 구분 없이 고른 횟수만
+  const emoLabels = [], emoDays = [];
+  keys.forEach(k => {
+    const em = store[k] && store[k].emotion;
+    const labels = toArr(em && em.entries).map(e => e.emotionLabel).filter(Boolean);
+    if (!labels.length) return;
+    emoLabels.push(...labels);
+    emoDays.push([k, labels]);
+  });
+  const ec = topCounts(emoLabels, 12);
+  document.getElementById('s-emotions').innerHTML =
+    ec.length ? ec.map(([w, c]) => `<span>${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')
+              : emptyMini('이 기간에 기록한 마음이 없어요.');
+  document.getElementById('s-emo-days').innerHTML = emoDays.map(([k, labels]) => {
+    const d = fromKey(k);
+    return rankRow(labels.join(', '), `${d.getMonth()+1}/${d.getDate()} (${WEEK[d.getDay()]})`);
+  }).join('');
+
   const kw = topCounts([...taskWords, ...thoughtWords], 12);
   document.getElementById('s-keywords').innerHTML =
     kw.length ? kw.map(([w, c]) => `<span>${esc(w)}<small>${c}</small></span>`).join('')
@@ -816,11 +906,6 @@ function renderSummary() {
   document.getElementById('s-postponed').innerHTML =
     pp.length ? pp.map(([t, c]) => rankRow(t, c + '회')).join('')
               : emptyMini('미룬 일이 없어요. 잘했어요!');
-
-  const tp = topCounts(thoughtWords, 10);
-  document.getElementById('s-topics').innerHTML =
-    tp.length ? tp.map(([w, c]) => `<span>${esc(w)}<small>${c}</small></span>`).join('')
-              : emptyMini('생각/메모 기록이 없어요.');
 
   const prog = topCounts(progressed, 12);
   document.getElementById('s-progressed').innerHTML =
@@ -1369,17 +1454,6 @@ function renderEmotionFooter() {
   msg.textContent = text || '';
   msg.className = 'emo-msg' + (type ? ' ' + type : '');
   document.getElementById('emo-del').hidden = !saved;
-
-  // 접혔을 때 요약: 저장된 기록 우선, 없으면 작성 중인 선택
-  const sum = document.getElementById('emo-summary');
-  const list = saved && !dirty ? toArr(saved.entries) : emo.entries;
-  if (list.length) {
-    sum.textContent = list.map(e => e.emotionLabel).join(', ') + (dirty ? ' · 저장 전' : '');
-    sum.classList.remove('empty');
-  } else {
-    sum.textContent = '오늘의 마음을 남겨보세요';
-    sum.classList.add('empty');
-  }
 }
 
 // 한국 시간 자정이 지나면 오늘 화면을 새 날짜로 (이전 날짜 초안/기록은 날짜별로 그대로 보존)
@@ -1407,7 +1481,34 @@ function esc(s) {
 }
 
 // ── Init ──
-try { if (localStorage.getItem('emoCollapsed') === '1') document.getElementById('card-emotion').classList.add('collapsed'); } catch (e) {}
+// 평일 10~19시(한국 시간)에는 오늘의 감정 카드를 접어서 시작. 그 외 시간엔 마지막 접힘 상태를 따름.
+function isWorkHours() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Seoul', weekday: 'short', hour: '2-digit', hourCycle: 'h23'
+    }).formatToParts(new Date());
+    const wd = parts.find(x => x.type === 'weekday').value;
+    const h = Number(parts.find(x => x.type === 'hour').value);
+    return !['Sat', 'Sun'].includes(wd) && h >= 10 && h < 19;
+  } catch (e) { return false; }
+}
+let lastWorkHours = isWorkHours();
+function applyEmotionCollapse() {
+  let collapsed = lastWorkHours;
+  if (!collapsed) { try { collapsed = localStorage.getItem('emoCollapsed') === '1'; } catch (e) {} }
+  document.getElementById('card-emotion').classList.toggle('collapsed', collapsed);
+}
+applyEmotionCollapse();
+// 근무 시간에 들어서면(앱을 켜 둔 상태/다시 열었을 때) 자동으로 접기
+function checkWorkHours() {
+  const now = isWorkHours();
+  if (now !== lastWorkHours) {
+    lastWorkHours = now;
+    if (now) document.getElementById('card-emotion').classList.add('collapsed');
+  }
+}
+setInterval(checkWorkHours, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkWorkHours(); });
 renderDay(); // Firebase 응답 전에 즉시 UI 표시
 
 db.ref('days').on('value',
@@ -1415,7 +1516,7 @@ db.ref('days').on('value',
     store = snapshot.val() || {};
     const active = document.activeElement;
     const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
-    if (!isTyping) {
+    if (!isTyping && !drag) {
       renderDay();
       if (TAB_SECTIONS[curTab] === 'summary') renderSummary();
     }

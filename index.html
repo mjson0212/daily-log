@@ -265,6 +265,84 @@
       margin-right: 0.45rem; flex-shrink: 0; vertical-align: middle;
     }
 
+    /* ── 오늘의 감정 ── */
+    #card-emotion .collapse-body { max-height: none; }
+    #card-emotion.collapsed .collapse-body { max-height: 0; }
+    .emo-summary { font-size: 0.84rem; color: var(--text-sub); margin-top: 0.3rem; cursor: pointer; word-break: keep-all; overflow-wrap: anywhere; }
+    .emo-summary.empty { color: var(--text-muted); }
+    .collapsible:not(.collapsed) .emo-summary { display: none; }
+    .emo-guide { font-size: 0.84rem; color: var(--text-sub); margin-bottom: 0.75rem; word-break: keep-all; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      min-height: 36px; max-width: 100%;
+      padding: 0.3rem 0.85rem;
+      border: 1.5px solid var(--border); border-radius: 20px;
+      background: var(--surface); color: var(--text);
+      font-size: 0.88rem; font-family: inherit; line-height: 1.3;
+      text-align: left; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .chip:active { opacity: 0.75; }
+    .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .chip.pick { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+    .chip .chk { font-size: 0.8rem; }
+    .text-btn { border: none; background: none; color: var(--accent); font-size: 0.84rem; font-family: inherit; cursor: pointer; padding: 0.3rem 0.15rem; min-height: 36px; }
+    .text-btn:active { opacity: 0.6; }
+    .emo-tools { display: flex; flex-wrap: wrap; gap: 0 1rem; margin-top: 0.5rem; }
+    .emo-all { margin-top: 0.4rem; background: var(--surface2); border-radius: 8px; padding: 0.35rem 0.75rem 0.7rem; }
+    .emo-group { border-bottom: 1px solid var(--border); }
+    .emo-group summary { cursor: pointer; padding: 0.55rem 0; font-size: 0.88rem; list-style: none; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .emo-group summary::-webkit-details-marker { display: none; }
+    .emo-group summary::after { content: '▾'; color: var(--text-muted); font-size: 0.75rem; }
+    .emo-group[open] summary::after { content: '▴'; }
+    .emo-group summary small { color: var(--text-muted); margin-left: 0.3rem; }
+    .emo-group .chips { padding-bottom: 0.7rem; }
+    .emo-custom { display: flex; gap: 0.5rem; margin-top: 0.7rem; }
+    .emo-custom input { flex: 1; min-width: 0; background: var(--surface); padding: 0.5rem 0.75rem; }
+    .emo-sel-title { font-size: 0.83rem; color: var(--text-sub); font-weight: 600; margin: 1.1rem 0 0.2rem; }
+    .emo-entry {
+      display: grid;
+      grid-template-columns: minmax(110px, 30%) minmax(0, 1fr);
+      gap: 0.4rem 1rem;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .emo-entry-head { min-width: 0; }
+    .emo-name-row { display: flex; align-items: center; gap: 0.2rem; }
+    .emo-name { font-weight: 700; font-size: 0.98rem; color: var(--accent); word-break: keep-all; overflow-wrap: anywhere; }
+    .emo-x { width: 30px; height: 30px; border: none; background: none; color: var(--text-muted); cursor: pointer; border-radius: 6px; flex-shrink: 0; font-size: 0.85rem; }
+    .emo-x:active { background: var(--surface2); }
+    .emo-orig { font-size: 0.74rem; color: var(--text-muted); }
+    .emo-reason { min-width: 0; }
+    .emo-reason label { margin-bottom: 0.25rem; }
+    .emo-reason textarea { min-height: 64px; }
+    .emo-refine { grid-column: 1 / -1; background: var(--surface2); border-radius: 8px; padding: 0.85rem; min-width: 0; }
+    .emo-refine-title { font-weight: 700; font-size: 0.92rem; }
+    .emo-refine-desc { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.6rem; word-break: keep-all; }
+    .refine-opts { display: grid; gap: 0.4rem; }
+    .refine-opt {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0.05rem;
+      width: 100%; padding: 0.55rem 0.75rem; text-align: left;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--text); font-family: inherit; cursor: pointer;
+    }
+    .refine-opt b { font-size: 0.92rem; }
+    .refine-opt span { font-size: 0.78rem; color: var(--text-sub); line-height: 1.5; word-break: keep-all; }
+    .refine-opt .tag { display: inline; font-size: 0.7rem; color: var(--text-muted); font-weight: 400; margin-left: 0.35rem; }
+    .refine-opt.on { border-color: var(--accent); background: var(--accent-light); }
+    .emo-refine .emo-all { background: var(--surface); }
+    .emo-refine-msg { font-size: 0.8rem; color: var(--event); min-height: 1.2rem; margin: 0.4rem 0; }
+    .emo-actions { margin-top: 1rem; display: flex; flex-direction: column; align-items: stretch; gap: 0.3rem; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+    .emo-msg { font-size: 0.82rem; text-align: center; color: var(--text-muted); min-height: 1.2rem; word-break: keep-all; }
+    .emo-msg.ok { color: var(--done); }
+    .emo-msg.err { color: #c53030; }
+    .emo-del { align-self: center; color: var(--text-muted); font-size: 0.78rem; }
+    @media (max-width: 560px) {
+      .emo-entry { grid-template-columns: minmax(0, 1fr); }
+    }
+
     @media (max-width: 480px) {
       .section { padding: 1.1rem 0.875rem 4rem; }
       .card { padding: 1.05rem; }
@@ -310,10 +388,23 @@
     </div>
   </div>
 
-  <div class="card collapsible collapsed" id="card-thought">
-    <h2 onclick="toggleCard('card-thought')">💭 오늘 생각</h2>
+  <div class="card collapsible" id="card-emotion">
+    <h2 onclick="toggleCard('card-emotion')">🌿 오늘의 감정</h2>
+    <div class="emo-summary" id="emo-summary" onclick="toggleCard('card-emotion')"></div>
     <div class="collapse-body">
-      <textarea id="f-thought" placeholder="오늘 떠오른 생각, 기분, 관찰" oninput="autosave()"></textarea>
+      <p class="emo-guide">지금 마음에 가까운 단어를 골라보세요. 여러 개 골라도 괜찮아요.</p>
+      <div class="chips" id="emo-chips"></div>
+      <div class="emo-tools">
+        <button type="button" class="text-btn" onclick="emoShuffle()">↻ 다른 감정 보기</button>
+        <button type="button" class="text-btn" id="emo-all-btn" onclick="emoToggleAll()">전체 단어 보기 ▾</button>
+      </div>
+      <div class="emo-all" id="emo-all" hidden></div>
+      <div id="emo-entries"></div>
+      <div class="emo-actions">
+        <button type="button" class="btn btn-primary" id="emo-save" onclick="emoSave()">오늘의 마음 기록하기</button>
+        <div class="emo-msg" id="emo-msg" role="status"></div>
+        <button type="button" class="text-btn emo-del" id="emo-del" onclick="emoDelete()" hidden>이 날의 감정 기록 삭제</button>
+      </div>
     </div>
   </div>
 
@@ -425,20 +516,35 @@ function toKey(d) { return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDat
 function fromKey(k) { const [y,m,dd] = k.split('-').map(Number); return new Date(y, m-1, dd); }
 const WEEK = ['일','월','화','수','목','금','토'];
 
-let curDate = toKey(new Date());
+// 오늘 날짜는 한국 시간(Asia/Seoul) 기준
+function todayKey() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(new Date());
+    const g = t => parts.find(x => x.type === t).value;
+    return `${g('year')}-${g('month')}-${g('day')}`;
+  } catch (e) {
+    return toKey(new Date());
+  }
+}
+
+let curDate = todayKey();
 
 // ── Day storage (Firebase-backed) ──
+function toArr(x) { return Array.isArray(x) ? x : (x && typeof x === 'object' ? Object.values(x) : []); }
 function getDay(k) {
   const d = store[k];
-  return d ? JSON.parse(JSON.stringify(d)) : blankDay();
+  const c = d ? JSON.parse(JSON.stringify(d)) : {};
+  return Object.assign(blankDay(), c, { items: toArr(c.items) });
 }
 function blankDay() { return { items: [], thought: '', one: '' }; }
 function dayEmpty(d) {
-  return (!d.items || d.items.length === 0) &&
-         !(d.thought || '').trim() && !(d.one || '').trim();
+  return (!d.items || toArr(d.items).length === 0) &&
+         !(d.thought || '').trim() && !(d.one || '').trim() && !d.emotion;
 }
 function setDay(k, data) {
-  if (dayEmpty(data)) {
+  if (dayEmpty(data) && !data.emotionDraft) {
     delete store[k];
     db.ref('days/' + k).remove();
   } else {
@@ -450,7 +556,7 @@ function setDay(k, data) {
 // ── Render day ──
 function renderDate() {
   const d = fromKey(curDate);
-  const today = toKey(new Date());
+  const today = todayKey();
   document.getElementById('date-main').textContent =
     `${d.getMonth()+1}월 ${d.getDate()}일 (${WEEK[d.getDay()]})`;
   let sub = `${d.getFullYear()}`;
@@ -492,10 +598,10 @@ function renderDay() {
   });
 
   const active = document.activeElement;
-  if (active !== document.getElementById('f-thought'))
-    document.getElementById('f-thought').value = day.thought || '';
   if (active !== document.getElementById('f-one'))
     document.getElementById('f-one').value = day.one || '';
+
+  renderEmotion();
 }
 
 function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
@@ -589,8 +695,7 @@ function migrateItem(id) {
 let saveT = null;
 function autosave() {
   const day = getDay(curDate);
-  day.thought = document.getElementById('f-thought').value;
-  day.one = document.getElementById('f-one').value;
+  day.one =document.getElementById('f-one').value;
   setDay(curDate, day);
   const hint = document.getElementById('save-hint');
   hint.textContent = '저장됨 ✓';
@@ -604,7 +709,7 @@ function shiftDay(n) {
   curDate = toKey(new Date(fromKey(curDate).getTime() + n * 86400000));
   renderDay();
 }
-function goToday() { curDate = toKey(new Date()); renderDay(); }
+function goToday() { curDate = todayKey(); renderDay(); }
 function openPicker() {
   const pk = document.getElementById('date-picker');
   pk.value = curDate;
@@ -724,7 +829,8 @@ function renderSummary() {
 }
 
 function toggleCard(id) {
-  document.getElementById(id).classList.toggle('collapsed');
+  const collapsed = document.getElementById(id).classList.toggle('collapsed');
+  if (id === 'card-emotion') { try { localStorage.setItem('emoCollapsed', collapsed ? '1' : '0'); } catch (e) {} }
 }
 
 function rankRow(text, cnt) {
@@ -777,12 +883,531 @@ function stopBreathe() {
   document.getElementById('breathe-counter').style.display = 'none';
 }
 
+// ── 오늘의 감정 ──
+// 저장 구조
+//   days/{date}/emotion       : 저장 완료 기록 { date, timezone, offeredEmotionIds, entries[], savedAt }
+//   days/{date}/emotionDraft  : 작성 중 초안 { offeredIds, seenIds, entriesJson, stashJson, updatedAt }
+//   localStorage emoDraft:{date} : 초안 사본 (오프라인/새로고침 즉시 복구용)
+const EMO_GROUPS = [
+  { key: 'joy', name: '기쁨/즐거움', words: '기쁘다, 흐뭇하다, 만족하다, 편안하다, 평화롭다, 즐겁다, 상쾌하다, 명랑하다, 평온하다, 쾌활하다, 행복하다, 흡족하다, 기분 좋다, 뿌듯하다, 황홀하다, 훈훈하다, 감격스럽다, 반갑다, 태평하다, 시원하다, 생기 있다, 활기차다, 신바람 나다, 가슴 벅차다' },
+  { key: 'love', name: '애정/관심', words: '다정하다, 친절하다, 자상하다, 온화하다, 감미롭다, 예쁘다, 사랑스럽다, 상냥하다, 따뜻하다, 애정이 깊다, 호감을 준다, 멋지다, 친숙하다, 인정 있다, 사랑이 넘친다, 낙관적이다, 마음이 넓다, 순수하다, 진실하다, 소박하다' },
+  { key: 'able', name: '능력/자신감', words: '자신 있다, 능력 있다, 용기 있다, 재능 있다, 자랑스럽다, 건강하다, 믿음직하다, 튼튼하다, 대담하다, 힘세다, 강하다, 신뢰할 만하다, 훌륭하다, 용감하다, 씩씩하다, 성실하다, 충실하다, 신중하다, 확실하다, 강력하다, 협조적이다, 의기양양하다, 존경스럽다, 중요하다, 영웅적이다, 활발하다, 믿을 만하다' },
+  { key: 'sad', name: '슬픔/근심', words: '쓸쓸하다, 애처롭다, 외롭다, 고독하다, 허전하다, 우울하다, 슬프다, 불행하다, 비참하다, 불쌍하다, 쓸모없다, 낙담하다, 버려지다, 측은하다, 처참하다, 비탄하다, 암담하다, 패배하다, 부서지다, 절망하다, 보잘것없다, 침통하다, 안쓰럽다, 비관하다, 혼란스럽다, 사랑받지 못하다, 기분 나쁘다, 억압되다, 무시당하다, 울적하다, 비난받다, 고민하다, 눈물 나다, 마음이 아프다, 불편하다, 염려하다, 답답하다' },
+  { key: 'fear', name: '두려움/불안', words: '두렵다, 무섭다, 불안하다, 겁먹다, 긴장하다, 공포에 사로잡히다, 초조하다, 당황하다, 소름 끼치다, 주눅이 들다, 겁에 질리다, 떨리다, 무시무시하다, 주저하다, 소심하다, 섬뜩하다, 안절부절못하다, 놀라다, 압박감이 들다, 절망적이다, 자신 없다, 부끄러워하다, 조바심하다, 불안정하다, 쩔쩔매다, 부자연스럽다' },
+  { key: 'anger', name: '분노/화', words: '밉다, 화나다, 증오하다, 노하다, 격분하다, 분노가 끓어오르다, 신경질 내다, 배척하다, 무시하다, 얕보다, 학대하다, 공격하다, 분개하다, 저주하다, 반발하다, 경멸하다, 모욕하다, 싫어하다, 독기가 있다, 심술부리다, 짜증 나다, 쌀쌀하다, 질투하다, 원망하다, 파괴하다, 자포자기하다, 저항하다, 흥분하다, 분통 터지다, 배반감을 느끼다, 거부하다, 울분을 느끼다' },
+  { key: 'daily', name: '일상 표현', words: '고맙다, 안심되다, 후련하다, 설레다, 든든하다, 막막하다, 부담스럽다, 서운하다, 억울하다, 지치다' }
+];
+
+// 매일 기본 후보 풀 (긍정/부정 구분은 추출에만 사용하고 화면에는 표시하지 않음)
+const EMO_POS_LABELS = '기쁘다, 흐뭇하다, 만족하다, 편안하다, 평화롭다, 즐겁다, 상쾌하다, 평온하다, 행복하다, 흡족하다, 기분 좋다, 뿌듯하다, 훈훈하다, 감격스럽다, 반갑다, 시원하다, 생기 있다, 활기차다, 신바람 나다, 가슴 벅차다, 따뜻하다, 자신 있다, 용기 있다, 자랑스럽다, 고맙다, 안심되다, 후련하다, 설레다, 든든하다';
+const EMO_NEG_LABELS = '쓸쓸하다, 외롭다, 허전하다, 우울하다, 슬프다, 낙담하다, 암담하다, 혼란스럽다, 기분 나쁘다, 울적하다, 마음이 아프다, 불편하다, 염려하다, 답답하다, 두렵다, 무섭다, 불안하다, 긴장하다, 초조하다, 당황하다, 주눅이 들다, 떨리다, 주저하다, 압박감이 들다, 자신 없다, 조바심하다, 화나다, 싫어하다, 짜증 나다, 질투하다, 원망하다, 배반감을 느끼다, 막막하다, 부담스럽다, 서운하다, 억울하다, 지치다';
+
+// 더 가까운 단어 찾기 — 동의어가 아니라 감정을 구체화하기 위한 선택 예시
+const EMO_REFINE = {
+  '무섭다': [
+    ['막막하다', '어떻게 시작하거나 해결해야 할지 모르겠다'],
+    ['부담스럽다', '해야 할 일을 감당하기 벅차게 느낀다'],
+    ['긴장하다', '앞둔 일 때문에 마음이나 몸이 조인다'],
+    ['불안하다', '좋지 않은 일이 생길까 걱정된다'],
+    ['무섭다', '위험하거나 위협적이라고 느낀다']
+  ],
+  '화나다': [
+    ['억울하다', '부당한 일을 당했다고 느낀다'],
+    ['서운하다', '기대했던 관심이나 배려를 받지 못했다']
+  ],
+  '슬프다': [
+    ['허전하다', '무언가 빠진 듯 마음이 비어 있다']
+  ],
+  '기분 좋다': [
+    ['뿌듯하다', '내가 한 일이나 결과가 자랑스럽다'],
+    ['후련하다', '마음에 걸렸던 일이 풀렸다']
+  ]
+};
+
+function strHash(s) {
+  let h = 0x811c9dc5;
+  for (const ch of s) { h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(36);
+}
+const EMO = {};      // id -> { id, label }
+const EMO_ID = {};   // label -> id
+EMO_GROUPS.forEach(g => {
+  g.ids = [];
+  g.words.split(',').map(w => w.trim()).filter(Boolean).forEach(label => {
+    let id = EMO_ID[label];
+    if (!id) { id = 'emo_' + strHash(label); EMO[id] = { id, label }; EMO_ID[label] = id; }
+    if (!g.ids.includes(id)) g.ids.push(id);
+  });
+});
+function emoLabelsToIds(str) {
+  return [...new Set(str.split(',').map(w => w.trim()).filter(Boolean).map(l => {
+    if (!EMO_ID[l]) console.warn('감정 목록에 없는 단어:', l);
+    return EMO_ID[l];
+  }).filter(Boolean))];
+}
+const EMO_POS = emoLabelsToIds(EMO_POS_LABELS);
+const EMO_NEG = emoLabelsToIds(EMO_NEG_LABELS);
+const EMO_POS_SET = new Set(EMO_POS);
+function emoLabelId(label) { return EMO_ID[label] || ('custom_' + strHash(label)); }
+function emoRefineOptions(label) {
+  if (EMO_REFINE[label]) return EMO_REFINE[label];
+  for (const head in EMO_REFINE) {
+    const list = EMO_REFINE[head];
+    if (list.some(([w]) => w === label)) return list.some(([w]) => w === head) ? list : [...list, [head, '']];
+  }
+  return null;
+}
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function sampleN(list, n, rnd) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a.slice(0, n);
+}
+// 날짜별 첫 후보: 긍정 5 + 부정 5, 중복 없이 섞어서. 날짜 시드라 저장 전에도 같은 날엔 동일.
+function emoInitialOffer(k) {
+  const rnd = mulberry32(parseInt(strHash('emo:' + k), 36));
+  return sampleN([...sampleN(EMO_POS, 5, rnd), ...sampleN(EMO_NEG, 5, rnd)], 10, rnd);
+}
+
+// ── 감정 상태 ──
+let emo = null;          // 현재 날짜의 작업 상태
+let emoSaving = false;
+let emoFailed = false;
+let emoMsg = { text: '', type: '' };
+let emoDraftT = null, emoPending = null;
+
+function emoSaved(k) { const d = store[k]; return d && d.emotion ? d.emotion : null; }
+function emoReadDraft(k) {
+  let local = null;
+  try { local = JSON.parse(localStorage.getItem('emoDraft:' + k) || 'null'); } catch (e) {}
+  const remote = (store[k] && store[k].emotionDraft) || null;
+  if (local && remote) return (local.updatedAt || 0) >= (remote.updatedAt || 0) ? local : remote;
+  return local || remote;
+}
+function emoParse(s, fallback) { try { const v = JSON.parse(s); return v == null ? fallback : v; } catch (e) { return fallback; } }
+
+function loadEmo(k) {
+  const saved = emoSaved(k);
+  const dr = emoReadDraft(k);
+  let entries;
+  if (dr && typeof dr.entriesJson === 'string') entries = toArr(emoParse(dr.entriesJson, []));
+  else entries = toArr(saved && saved.entries).map(e => ({
+    id: e.id, emotionId: e.emotionId, emotionLabel: e.emotionLabel,
+    originalEmotionLabel: e.originalEmotionLabel || '', reason: e.reason || ''
+  }));
+  const stash = (dr && emoParse(dr.stashJson, {})) || {};
+  let offered = toArr(dr && dr.offeredIds).filter(id => EMO[id]);
+  if (!offered.length) offered = toArr(saved && saved.offeredEmotionIds).filter(id => EMO[id]);
+  if (!offered.length) offered = emoInitialOffer(k);
+  const seen = [...new Set([...toArr(dr && dr.seenIds), ...offered])];
+  const ui = (emo && emo.date === k) ? emo.ui
+    : { showAll: false, refineFor: null, refinePick: null, refineAll: false, refineMsg: '', open: {}, customMsg: '' };
+  emo = { date: k, offered, seen, entries, stash, touched: false, ui };
+}
+
+function ensureEmo() {
+  if (!emo || emo.date !== curDate) {
+    emoFlushDraft();
+    emoFailed = false;
+    emoMsg = { text: '', type: '' };
+    emo = null;
+    loadEmo(curDate);
+  } else if (!emo.touched && !emoSaving) {
+    loadEmo(curDate); // 원격 변경 반영 (사용자가 편집 중이 아닐 때만)
+  }
+}
+
+function emoDraftObj() {
+  return {
+    offeredIds: emo.offered.slice(),
+    seenIds: emo.seen.slice(),
+    entriesJson: JSON.stringify(emo.entries),
+    stashJson: JSON.stringify(emo.stash),
+    updatedAt: Date.now()
+  };
+}
+function emoPersistDraft() {
+  emo.touched = true;
+  const k = emo.date, obj = emoDraftObj();
+  try { localStorage.setItem('emoDraft:' + k, JSON.stringify(obj)); } catch (e) {}
+  emoPending = { k, obj };
+  clearTimeout(emoDraftT);
+  emoDraftT = setTimeout(emoFlushDraft, 800);
+}
+function emoFlushDraft() {
+  clearTimeout(emoDraftT);
+  if (!emoPending) return;
+  const { k, obj } = emoPending;
+  emoPending = null;
+  db.ref('days/' + k + '/emotionDraft').set(obj).catch(err => console.error('감정 초안 저장 오류:', err && err.code));
+}
+
+function emoSelectedIds() { return new Set(emo.entries.map(e => e.emotionId)); }
+function emoEntryKey(list) {
+  return JSON.stringify(toArr(list).map(e => [e.emotionId, e.emotionLabel, e.originalEmotionLabel || '', e.reason || '']));
+}
+function emoIsDirty() {
+  const saved = emoSaved(emo.date);
+  return emoEntryKey(saved ? saved.entries : []) !== emoEntryKey(emo.entries);
+}
+
+function emoChanged() {
+  if (emoMsg.type === 'ok') emoMsg = { text: '', type: '' };
+  emoPersistDraft();
+  renderEmotion();
+}
+
+// ── 감정 동작 ──
+function emoAddEntry(id, label) {
+  emo.entries.push({
+    id: 'entry-' + newId(),
+    emotionId: id,
+    emotionLabel: label,
+    originalEmotionLabel: '',
+    reason: emo.stash[id] || ''   // 해제했던 감정을 다시 고르면 적어둔 이유 복구
+  });
+  delete emo.stash[id];
+}
+function emoRemoveAt(i) {
+  const e = emo.entries[i];
+  if ((e.reason || '').trim()) emo.stash[e.emotionId] = e.reason;
+  if (emo.ui.refineFor === e.id) emo.ui.refineFor = null;
+  emo.entries.splice(i, 1);
+}
+function emoToggle(id) {
+  ensureEmo();
+  const i = emo.entries.findIndex(e => e.emotionId === id);
+  if (i >= 0) emoRemoveAt(i);
+  else if (EMO[id]) emoAddEntry(id, EMO[id].label);
+  emoChanged();
+}
+function emoRemove(entryId) {
+  const i = emo.entries.findIndex(e => e.id === entryId);
+  if (i < 0) return;
+  emoRemoveAt(i);
+  emoChanged();
+}
+function emoReason(entryId, v) {
+  const e = emo.entries.find(x => x.id === entryId);
+  if (!e) return;
+  e.reason = v;
+  if (emoMsg.type === 'ok') emoMsg = { text: '', type: '' };
+  emoPersistDraft();
+  renderEmotionFooter();
+}
+
+// 다른 감정 보기: 선택하지 않은 후보만 같은 성격의 새 단어로 교체 (아직 안 본 단어 우선)
+function emoShuffle() {
+  ensureEmo();
+  const sel = emoSelectedIds();
+  const seen = new Set(emo.seen);
+  const next = emo.offered.slice();
+  next.forEach((id, i) => {
+    if (sel.has(id)) return;
+    const pool = EMO_POS_SET.has(id) ? EMO_POS : EMO_NEG;
+    const taken = new Set([...next, ...sel]);
+    let cand = pool.filter(x => !taken.has(x) && !seen.has(x));
+    if (!cand.length) cand = pool.filter(x => !taken.has(x));
+    if (!cand.length) return;
+    const pick = cand[Math.floor(Math.random() * cand.length)];
+    next[i] = pick;
+    seen.add(pick);
+  });
+  emo.offered = next;
+  emo.seen = [...seen];
+  emoPersistDraft();
+  renderEmotion();
+}
+
+function emoToggleAll() {
+  ensureEmo();
+  emo.ui.showAll = !emo.ui.showAll;
+  emo.ui.customMsg = '';
+  renderEmotion();
+}
+function emoGroupOpen(ctx, key, open) { if (emo) emo.ui.open[ctx + ':' + key] = open; }
+
+function emoAddCustom() {
+  const inp = document.getElementById('emo-custom');
+  const label = (inp.value || '').trim().replace(/\s+/g, ' ').slice(0, 30);
+  if (!label) { inp.focus(); return; }
+  ensureEmo();
+  const id = emoLabelId(label);
+  if (emo.entries.some(e => e.emotionId === id)) {
+    emo.ui.customMsg = '이미 고른 감정이에요';
+    renderEmotion();
+    return;
+  }
+  emo.ui.customMsg = '';
+  emoAddEntry(id, EMO[id] ? EMO[id].label : label);
+  emoChanged();
+}
+
+// 더 가까운 단어 찾기
+function emoRefineOpen(entryId) {
+  ensureEmo();
+  const u = emo.ui;
+  u.refineFor = u.refineFor === entryId ? null : entryId;
+  u.refinePick = null; u.refineMsg = ''; u.refineAll = false;
+  renderEmotion();
+}
+function emoRefineClose() {
+  const u = emo.ui;
+  u.refineFor = null; u.refinePick = null; u.refineMsg = ''; u.refineAll = false;
+  renderEmotion();
+}
+function emoRefineToggleAll() { emo.ui.refineAll = !emo.ui.refineAll; renderEmotion(); }
+function emoRefinePick(entryId, id) {
+  const e = emo.entries.find(x => x.id === entryId);
+  if (!e || !EMO[id]) return;
+  const u = emo.ui;
+  if (id === e.emotionId) { u.refinePick = null; u.refineMsg = '지금 고른 단어예요.'; }
+  else if (emo.entries.some(x => x.emotionId === id)) { u.refinePick = null; u.refineMsg = '이미 고른 감정이에요'; }
+  else { u.refinePick = id; u.refineMsg = ''; }
+  renderEmotion();
+}
+function emoRefineApply(entryId) {
+  const e = emo.entries.find(x => x.id === entryId);
+  const id = emo.ui.refinePick;
+  if (!e || !id || !EMO[id]) return;
+  if (emo.entries.some(x => x.emotionId === id)) { emo.ui.refineMsg = '이미 고른 감정이에요'; renderEmotion(); return; }
+  const orig = e.originalEmotionLabel || e.emotionLabel;
+  e.emotionId = id;
+  e.emotionLabel = EMO[id].label;
+  e.originalEmotionLabel = orig === e.emotionLabel ? '' : orig;
+  // 이유(e.reason)는 그대로 유지
+  emo.ui.refineFor = null; emo.ui.refinePick = null; emo.ui.refineMsg = ''; emo.ui.refineAll = false;
+  emoChanged();
+}
+
+// ── 저장 / 삭제 ──
+function withTimeout(promise, ms) {
+  return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+}
+async function emoSave() {
+  ensureEmo();
+  if (emoSaving || !emo.entries.length) return;
+  const k = emo.date;
+  const record = {
+    date: k,
+    timezone: 'Asia/Seoul',
+    offeredEmotionIds: emo.offered.slice(),
+    entries: emo.entries.map(e => {
+      const o = { id: e.id, emotionId: e.emotionId, emotionLabel: e.emotionLabel, reason: e.reason || '' };
+      if (e.originalEmotionLabel) o.originalEmotionLabel = e.originalEmotionLabel;
+      return o;
+    }),
+    savedAt: new Date().toISOString()
+  };
+  const draft = emoDraftObj();
+  clearTimeout(emoDraftT); emoPending = null;
+  try { localStorage.setItem('emoDraft:' + k, JSON.stringify(draft)); } catch (e) {}
+
+  emoSaving = true; emoFailed = false; emoMsg = { text: '', type: '' };
+  renderEmotionFooter();
+  try {
+    await withTimeout(db.ref('days/' + k).update({ emotion: record, emotionDraft: draft }), 10000);
+    emoMsg = { text: '오늘의 마음을 기록했어요.', type: 'ok' };
+    if (emo && emo.date === k) emo.touched = false;
+  } catch (err) {
+    console.error('감정 기록 저장 오류:', err);
+    emoFailed = true;
+    emoMsg = { text: '저장하지 못했어요. 적은 내용은 그대로 있어요. 연결을 확인하고 다시 시도해주세요.', type: 'err' };
+  } finally {
+    emoSaving = false;
+    if (emo && emo.date === k) renderEmotion();
+  }
+}
+async function emoDelete() {
+  ensureEmo();
+  if (!emoSaved(emo.date)) return;
+  if (!confirm('이 날의 감정 기록을 모두 지울까요?\n지운 기록은 되돌릴 수 없어요.')) return;
+  const k = emo.date;
+  // 후보 목록은 유지하고 선택·이유만 비운 초안
+  const draft = Object.assign(emoDraftObj(), { entriesJson: '[]', stashJson: '{}' });
+  emoFlushDraft();
+  try {
+    await withTimeout(db.ref('days/' + k).update({ emotion: null, emotionDraft: draft }), 10000);
+    try { localStorage.setItem('emoDraft:' + k, JSON.stringify(draft)); } catch (e) {}
+    if (emo && emo.date === k) {
+      emo.entries = []; emo.stash = {}; emo.ui.refineFor = null; emo.touched = false;
+      emoMsg = { text: '감정 기록을 삭제했어요.', type: '' };
+    }
+  } catch (err) {
+    console.error('감정 기록 삭제 오류:', err);
+    if (emo && emo.date === k) emoMsg = { text: '삭제하지 못했어요. 다시 시도해주세요.', type: 'err' };
+  }
+  emoFailed = false;
+  if (emo && emo.date === k) renderEmotion();
+}
+
+// ── 감정 렌더 ──
+function emoChip(id, label, cls, onclick) {
+  const on = cls === 'on';
+  return `<button type="button" class="chip ${cls}" aria-pressed="${on}" onclick="${onclick}">` +
+         `${on ? '<span class="chk">✓</span>' : ''}${esc(label)}</button>`;
+}
+function emoGroupsHtml(ctx, entry) {
+  const sel = emoSelectedIds();
+  return EMO_GROUPS.map(g => {
+    const open = emo.ui.open[ctx + ':' + g.key];
+    const chips = g.ids.map(id => {
+      if (ctx === 'main') return emoChip(id, EMO[id].label, sel.has(id) ? 'on' : '', `emoToggle('${id}')`);
+      const cls = id === entry.emotionId ? 'on' : id === emo.ui.refinePick ? 'pick' : '';
+      return emoChip(id, EMO[id].label, cls, `emoRefinePick('${entry.id}','${id}')`);
+    }).join('');
+    return `<details class="emo-group" ${open ? 'open' : ''} ontoggle="emoGroupOpen('${ctx}','${g.key}',this.open)">` +
+           `<summary>${esc(g.name)}</summary><div class="chips">${chips}</div></details>`;
+  }).join('');
+}
+function emoRefineHtml(e) {
+  const u = emo.ui;
+  const opts = emoRefineOptions(e.emotionLabel);
+  const sel = emoSelectedIds();
+  let html = `<div class="emo-refine">` +
+    `<div class="emo-refine-title">내 마음에 더 가까운 표현은?</div>` +
+    `<div class="emo-refine-desc">뜻이 같은 단어가 아니라, 지금 느낌과 가까운 단어를 골라보세요.</div>`;
+  if (opts) {
+    html += `<div class="refine-opts">` + opts.map(([w, d]) => {
+      const id = EMO_ID[w];
+      if (!id) return '';
+      const cur = id === e.emotionId;
+      const taken = !cur && sel.has(id);
+      const tag = cur ? '<span class="tag">지금 단어</span>' : taken ? '<span class="tag">이미 고른 감정</span>' : '';
+      return `<button type="button" class="refine-opt ${u.refinePick === id ? 'on' : ''}" onclick="emoRefinePick('${e.id}','${id}')">` +
+             `<b>${esc(w)}${tag}</b>${d ? `<span>${esc(d)}</span>` : ''}</button>`;
+    }).join('') + `</div>`;
+  }
+  const showAll = u.refineAll || !opts;
+  if (opts) html += `<button type="button" class="text-btn" onclick="emoRefineToggleAll()">전체 목록에서 고르기 ${showAll ? '▴' : '▾'}</button>`;
+  if (showAll) html += `<div class="emo-all">${emoGroupsHtml('refine', e)}</div>`;
+  const pickLabel = u.refinePick && EMO[u.refinePick] ? EMO[u.refinePick].label : '';
+  html += `<div class="emo-refine-msg" role="status">${esc(u.refineMsg || (pickLabel ? `'${pickLabel}'(으)로 바꿀까요? 적은 이유는 그대로 남아요.` : ''))}</div>` +
+    `<div class="flex-row">` +
+      `<button type="button" class="btn btn-primary btn-sm" ${pickLabel ? '' : 'disabled'} onclick="emoRefineApply('${e.id}')">이 단어로 바꾸기</button>` +
+      `<button type="button" class="btn btn-secondary btn-sm" onclick="emoRefineClose()">원래 단어 유지</button>` +
+    `</div></div>`;
+  return html;
+}
+
+function renderEmotion() {
+  ensureEmo();
+  const sel = emoSelectedIds();
+  const u = emo.ui;
+
+  document.getElementById('emo-chips').innerHTML =
+    emo.offered.map(id => emoChip(id, EMO[id].label, sel.has(id) ? 'on' : '', `emoToggle('${id}')`)).join('');
+
+  const all = document.getElementById('emo-all');
+  document.getElementById('emo-all-btn').textContent = u.showAll ? '전체 단어 접기 ▴' : '전체 단어 보기 ▾';
+  if (u.showAll) {
+    const prevCustom = document.getElementById('emo-custom');
+    const customVal = prevCustom ? prevCustom.value : '';
+    all.hidden = false;
+    all.innerHTML = emoGroupsHtml('main') +
+      `<div class="emo-custom">` +
+        `<input type="text" id="emo-custom" maxlength="30" placeholder="직접 입력 (예: 홀가분하다)" onkeydown="if(event.key==='Enter'&&!event.isComposing)emoAddCustom()">` +
+        `<button type="button" class="btn btn-secondary btn-sm" onclick="emoAddCustom()">추가</button>` +
+      `</div>` +
+      (u.customMsg ? `<div class="emo-refine-msg">${esc(u.customMsg)}</div>` : '');
+    document.getElementById('emo-custom').value = u.customMsg ? customVal : '';
+  } else {
+    all.hidden = true;
+    all.innerHTML = '';
+  }
+
+  const entriesEl = document.getElementById('emo-entries');
+  if (!emo.entries.length) {
+    entriesEl.innerHTML = '';
+  } else {
+    entriesEl.innerHTML = `<div class="emo-sel-title">선택한 마음</div>` + emo.entries.map(e => `
+      <div class="emo-entry">
+        <div class="emo-entry-head">
+          <div class="emo-name-row">
+            <span class="emo-name">${esc(e.emotionLabel)}</span>
+            <button type="button" class="emo-x" title="선택 해제" aria-label="${esc(e.emotionLabel)} 선택 해제" onclick="emoRemove('${e.id}')">✕</button>
+          </div>
+          ${e.originalEmotionLabel ? `<div class="emo-orig">처음 고른 말: ${esc(e.originalEmotionLabel)}</div>` : ''}
+          <button type="button" class="text-btn" onclick="emoRefineOpen('${e.id}')">더 가까운 단어 찾기</button>
+        </div>
+        <div class="emo-reason">
+          <label for="emo-r-${e.id}">이 마음이 든 이유</label>
+          <textarea id="emo-r-${e.id}" rows="2" placeholder="어떤 일이 있었나요? 왜 이런 마음이 들었나요?" oninput="emoReason('${e.id}', this.value)">${esc(e.reason || '')}</textarea>
+        </div>
+        ${u.refineFor === e.id ? emoRefineHtml(e) : ''}
+      </div>`).join('');
+  }
+
+  renderEmotionFooter();
+}
+
+function renderEmotionFooter() {
+  const saved = emoSaved(emo.date);
+  const dirty = emoIsDirty();
+  const btn = document.getElementById('emo-save');
+  btn.textContent = emoSaving ? '저장하는 중…' : (saved ? '수정한 마음 저장하기' : '오늘의 마음 기록하기');
+  btn.disabled = emoSaving || !emo.entries.length || (!!saved && !dirty && !emoFailed);
+
+  const msg = document.getElementById('emo-msg');
+  let text = emoMsg.text, type = emoMsg.type;
+  if (!text) {
+    if (!emo.entries.length) text = saved ? '저장된 기록을 지우려면 아래 삭제를 눌러주세요.' : '감정을 하나 이상 고르면 기록할 수 있어요. 이유는 적지 않아도 괜찮아요.';
+    else if (saved && dirty) text = '아직 저장하지 않은 변경이 있어요.';
+    else if (saved) {
+      const t = new Date(saved.savedAt);
+      text = isNaN(t) ? '저장된 기록이에요.' : `${p(t.getHours())}:${p(t.getMinutes())}에 기록했어요.`;
+    }
+  }
+  msg.textContent = text || '';
+  msg.className = 'emo-msg' + (type ? ' ' + type : '');
+  document.getElementById('emo-del').hidden = !saved;
+
+  // 접혔을 때 요약: 저장된 기록 우선, 없으면 작성 중인 선택
+  const sum = document.getElementById('emo-summary');
+  const list = saved && !dirty ? toArr(saved.entries) : emo.entries;
+  if (list.length) {
+    sum.textContent = list.map(e => e.emotionLabel).join(', ') + (dirty ? ' · 저장 전' : '');
+    sum.classList.remove('empty');
+  } else {
+    sum.textContent = '오늘의 마음을 남겨보세요';
+    sum.classList.add('empty');
+  }
+}
+
+// 한국 시간 자정이 지나면 오늘 화면을 새 날짜로 (이전 날짜 초안/기록은 날짜별로 그대로 보존)
+let lastToday = todayKey();
+function checkDayRollover() {
+  const t = todayKey();
+  if (t === lastToday) return;
+  const a = document.activeElement;
+  if (a && ['INPUT', 'TEXTAREA'].includes(a.tagName)) return; // 입력 중이면 다음 확인 때
+  const wasToday = curDate === lastToday;
+  lastToday = t;
+  emoFlushDraft();
+  if (wasToday) curDate = t;
+  renderDay();
+}
+setInterval(checkDayRollover, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) emoFlushDraft(); else checkDayRollover();
+});
+window.addEventListener('pagehide', emoFlushDraft);
+
 // ── Util ──
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // ── Init ──
+try { if (localStorage.getItem('emoCollapsed') === '1') document.getElementById('card-emotion').classList.add('collapsed'); } catch (e) {}
 renderDay(); // Firebase 응답 전에 즉시 UI 표시
 
 db.ref('days').on('value',

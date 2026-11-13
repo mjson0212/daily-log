@@ -246,6 +246,46 @@
     .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
     .stat-label { font-size: 0.76rem; color: var(--text-sub); }
 
+    /* ── 노트 ── */
+    .note-row { display: block; width: 100%; text-align: left; background: var(--surface); border: none; border-radius: var(--radius); box-shadow: var(--shadow); padding: 0.85rem 1rem; margin-bottom: 0.6rem; cursor: pointer; color: var(--text); font: inherit; }
+    .note-row .nt { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .note-row .np { font-size: 0.85rem; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .note-row .nd { font-size: 0.75rem; color: var(--text-muted); }
+    .note-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.75rem; }
+    #note-status { font-size: 0.8rem; color: var(--text-muted); }
+    .note-card { padding: 1.25rem; }
+    #note-title { width: 100%; border: none; outline: none; background: transparent; color: var(--text); font: inherit; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; }
+    #note-body { min-height: 50vh; outline: none; font-size: 1rem; line-height: 1.75; word-break: break-word; }
+    #note-body:empty::before { content: attr(data-placeholder); color: var(--text-muted); }
+    #note-body ul, #note-body ol { padding-left: 1.5rem; margin: 0.15rem 0; }
+    #note-body h2 { font-size: 1.25rem; margin: 0.6rem 0 0.2rem; }
+    #note-body h3 { font-size: 1.07rem; margin: 0.5rem 0 0.15rem; }
+    #note-body p, #note-body div { min-height: 1.75em; }
+    #note-body pre {
+      background: var(--surface2); border-radius: 8px; padding: 0.7rem 0.9rem; margin: 0.4rem 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.86rem; line-height: 1.55;
+      white-space: pre-wrap; word-break: break-all; tab-size: 2;
+    }
+    #note-body hr { border: none; border-top: 1px solid var(--border); margin: 0.8rem 0; }
+    .slash-menu {
+      display: none; position: fixed; z-index: 200; width: 190px; max-height: 280px; overflow-y: auto;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); padding: 0.3rem;
+    }
+    .slash-menu button {
+      display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.45rem 0.55rem; border: none; border-radius: 6px;
+      background: none; color: var(--text); font: inherit; font-size: 0.9rem; text-align: left; cursor: pointer;
+    }
+    .slash-menu button.on, .slash-menu button:hover { background: var(--surface2); }
+    .slash-menu .si { width: 1.8rem; text-align: center; color: var(--text-sub); font-size: 0.8rem; font-family: ui-monospace, Consolas, monospace; }
+    .note-hint { font-size: 0.78rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem; }
+
+    .task-field { display: block; margin-bottom: 0.7rem; }
+    .task-field > span { display: block; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.2rem; }
+    .task-day { padding: 0.6rem 0; border-top: 1px solid var(--border); }
+    .task-day .td { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+    .task-day .tl { font-size: 0.9rem; word-break: break-word; }
+    .task-day .tl span { display: inline-block; min-width: 3.2rem; font-size: 0.78rem; color: var(--text-sub); }
+
     .br-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.35rem; margin-top: 0.9rem; }
     .br-day { text-align: center; font-size: 0.7rem; color: var(--text-sub); }
     .br-dots { display: flex; justify-content: center; gap: 2px; margin-top: 3px; }
@@ -283,6 +323,8 @@
     #breathe-counter { font-size: 1.8rem; font-weight: 300; color: var(--text); font-variant-numeric: tabular-nums; }
     #breathe-min-row { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--text-sub); font-size: 0.93rem; }
     #breathe-min { width: 4.5rem; padding: 0.4rem; text-align: center; font-size: 1rem; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--text); }
+    #breathe-sec-row { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; color: var(--text-sub); font-size: 0.88rem; }
+    #breathe-sec-row input { width: 3.2rem; padding: 0.3rem; margin: 0 0.2rem; text-align: center; font-size: 0.95rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); }
     #breathe-sound { display: flex; justify-content: center; align-items: center; gap: 0.6rem; margin-bottom: 1rem; font-size: 0.93rem; color: var(--text-sub); cursor: pointer; user-select: none; }
     #breathe-sound input { position: absolute; opacity: 0; width: 0; height: 0; }
     #breathe-sound .switch {
@@ -405,6 +447,7 @@
   <button onclick="goTab(1)">호흡</button>
   <button onclick="goTab(2)">이번주</button>
   <button onclick="goTab(3)">이번달</button>
+  <button onclick="goTab(4)">노트</button>
 </nav>
 
 <!-- ─── 오늘 (Daily Log) ─── -->
@@ -439,6 +482,19 @@
     </div>
   </div>
 
+  <div class="card collapsible collapsed" id="card-task">
+    <h2 onclick="toggleCard('card-task')">📌 오늘의 과제</h2>
+    <div class="collapse-body">
+      <label class="task-field"><span>목표</span>
+        <input type="text" id="f-goal"oninput="autosave()"></label>
+      <label class="task-field"><span>명언</span>
+        <input type="text" id="f-quote"oninput="autosave()"></label>
+      <label class="task-field"><span>키워드</span>
+        <input type="text" id="f-keyword"oninput="autosave()"></label>
+      <div class="save-hint" id="save-hint"></div>
+    </div>
+  </div>
+
   <div class="card collapsible" id="card-emotion">
     <h2 onclick="toggleCard('card-emotion')">🌿 오늘의 감정</h2>
     <div class="collapse-body">
@@ -458,13 +514,6 @@
     </div>
   </div>
 
-  <div class="card collapsible collapsed" id="card-one">
-    <h2 onclick="toggleCard('card-one')">🎯 내일 딱 하나</h2>
-    <div class="collapse-body">
-      <input type="text" id="f-one" placeholder="내일 이거 하나만은 꼭!!" oninput="autosave()">
-      <div class="save-hint" id="save-hint"></div>
-    </div>
-  </div>
 </div>
 
 <!-- ─── 이번주 / 이번달 (Summary) ─── -->
@@ -487,12 +536,17 @@
 
   <div class="card">
     <h2>🌬️ 호흡</h2>
-    <div class="stat-grid">
+    <div class="stat-grid" style="grid-template-columns:repeat(2,1fr)">
       <div class="stat"><div class="stat-num" id="s-br-count">0</div><div class="stat-label">호흡 횟수</div></div>
-      <div class="stat"><div class="stat-num" id="s-br-min">0</div><div class="stat-label">호흡한 시간(분)</div></div>
       <div class="stat"><div class="stat-num" id="s-br-full">0</div><div class="stat-label">3회 채운 날</div></div>
     </div>
     <div class="br-cal" id="s-br-cal"></div>
+  </div>
+
+  <div class="card">
+    <h2>📌 오늘의 과제</h2>
+    <div class="kw" id="s-task-kw"></div>
+    <div id="s-task-days" style="margin-top:0.75rem"></div>
   </div>
 
   <div class="card">
@@ -529,6 +583,11 @@
     <div id="breathe-min-row">
       <input type="number" id="breathe-min" min="1" max="120" value="20" inputmode="numeric"> 분
     </div>
+    <div id="breathe-sec-row">
+      <label>날숨 <input type="number" id="breathe-sec-out" min="1" max="60" value="10" inputmode="numeric">초</label>
+      <label>들숨 <input type="number" id="breathe-sec-in" min="1" max="60" value="4" inputmode="numeric">초</label>
+      <label>멈춤 <input type="number" id="breathe-sec-hold" min="0" max="60" value="1" inputmode="numeric">초</label>
+    </div>
     <label id="breathe-sound">
       <span>🔔 전환음</span>
       <input type="checkbox" id="breathe-sound-toggle" onchange="setSoundMode(this.checked ? 'beep' : 'off')">
@@ -538,6 +597,28 @@
       <button class="btn btn-primary" id="btn-start" onclick="startBreathe()">시작</button>
       <button class="btn btn-secondary" id="btn-stop" onclick="stopBreathe()" style="display:none">중단</button>
     </div>
+  </div>
+</div>
+
+<!-- ─── 노트 ─── -->
+<div id="notes" class="section">
+  <div id="notes-list-view">
+    <button class="btn btn-primary" style="width:100%;margin-bottom:1rem" onclick="newNote()">+ 새 노트</button>
+    <div id="notes-list"></div>
+    <div class="empty-state" id="notes-empty">아직 노트가 없어요.<br>날짜와 상관없이 자유롭게 적어보세요.</div>
+  </div>
+  <div id="note-edit-view" style="display:none">
+    <div class="note-bar">
+      <button class="btn btn-secondary btn-sm" onclick="closeNote()">‹ 목록</button>
+      <span id="note-status"></span>
+      <button class="btn btn-secondary btn-sm" onclick="deleteNote()">삭제</button>
+    </div>
+    <div class="card note-card">
+      <input type="text" id="note-title" placeholder="제목" autocomplete="off">
+      <div id="note-body" contenteditable="true" data-placeholder="여기에 적어보세요. / 를 치면 메뉴가 나와요"></div>
+    </div>
+    <div class="note-hint">/ 메뉴 · - 글머리 · 1. 번호 · # 제목 · ## 소제목 · ``` 코드 · Tab 들여쓰기</div>
+    <div id="slash-menu" class="slash-menu"></div>
   </div>
 </div>
 
@@ -561,8 +642,8 @@ const db = firebase.database();
 let store = {};
 
 // ── Navigation ──
-const TAB_SECTIONS = ['today', 'breathe', 'summary', 'summary'];
-const TAB_MODES    = [null,    null,      'week',    'month'];
+const TAB_SECTIONS = ['today', 'breathe', 'summary', 'summary', 'notes'];
+const TAB_MODES    = [null,    null,      'week',    'month',   null];
 let curTab = 0;
 
 function goTab(i) {
@@ -576,6 +657,8 @@ function goTab(i) {
     curPeriodOffset = 0;
   }
   if (TAB_SECTIONS[i] === 'summary') renderSummary();
+  if (TAB_SECTIONS[i] !== 'notes' && curNoteId) closeNote();
+  if (TAB_SECTIONS[i] === 'notes' && !curNoteId) renderNotesList();
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -605,12 +688,14 @@ function toArr(x) { return Array.isArray(x) ? x : (x && typeof x === 'object' ? 
 function getDay(k) {
   const d = store[k];
   const c = d ? JSON.parse(JSON.stringify(d)) : {};
+  delete c.one; delete c.breathLog; // 없앤 항목 (내일 딱 하나, 호흡 시간)
   return Object.assign(blankDay(), c, { items: toArr(c.items) });
 }
-function blankDay() { return { items: [], thought: '', one: '' }; }
+function blankDay() { return { items: [], thought: '' }; }
+function taskEmpty(t) { return !t || !['goal', 'quote', 'keyword'].some(f => (t[f] || '').trim()); }
 function dayEmpty(d) {
   return (!d.items || toArr(d.items).length === 0) &&
-         !(d.thought || '').trim() && !(d.one || '').trim() && !d.emotion && !d.breath && !toArr(d.breathLog).length;
+         !(d.thought || '').trim() && taskEmpty(d.task) && !d.emotion && !d.breath;
 }
 function setDay(k, data) {
   if (dayEmpty(data) && !data.emotionDraft) {
@@ -671,8 +756,11 @@ function renderDay() {
   });
 
   const active = document.activeElement;
-  if (active !== document.getElementById('f-one'))
-    document.getElementById('f-one').value = day.one || '';
+  const task = day.task || {};
+  [['f-goal', 'goal'], ['f-quote', 'quote'], ['f-keyword', 'keyword']].forEach(([id, f]) => {
+    const el = document.getElementById(id);
+    if (active !== el) el.value = task[f] || '';
+  });
 
   renderEmotion();
 }
@@ -818,7 +906,12 @@ function migrateItem(id) {
 let saveT = null;
 function autosave() {
   const day = getDay(curDate);
-  day.one =document.getElementById('f-one').value;
+  const task = {
+    goal: document.getElementById('f-goal').value,
+    quote: document.getElementById('f-quote').value,
+    keyword: document.getElementById('f-keyword').value,
+  };
+  if (taskEmpty(task)) delete day.task; else day.task = task;
   setDay(curDate, day);
   const hint = document.getElementById('save-hint');
   hint.textContent = '저장됨 ✓';
@@ -930,8 +1023,28 @@ function renderSummary() {
   document.getElementById('s-done').textContent = done;
   document.getElementById('s-migrated').textContent = migrated;
 
-  // 호흡: 횟수(칸), 실제 마친 시간(breathLog), 3회 채운 날
-  let brCount = 0, brSec = 0, brFull = 0;
+  // 오늘의 과제: 키워드 빈도 + 날짜별 목표/명언/키워드
+  const taskKw = [], taskDays = [];
+  keys.forEach(k => {
+    const t = getDay(k).task;
+    if (taskEmpty(t)) return;
+    const kws = (t.keyword || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+    taskKw.push(...kws);
+    taskDays.push([k, t]);
+  });
+  const tk = topCounts(taskKw, 12);
+  document.getElementById('s-task-kw').innerHTML =
+    tk.length ? tk.map(([w, c]) => `<span>${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')
+              : (taskDays.length ? '' : emptyMini('이 기간에 적은 과제가 없어요.'));
+  document.getElementById('s-task-days').innerHTML = taskDays.map(([k, t]) => {
+    const d = fromKey(k);
+    const line = (lbl, v) => (v || '').trim() ? `<div class="tl"><span>${lbl}</span>${esc(v.trim())}</div>` : '';
+    return `<div class="task-day"><div class="td">${d.getMonth()+1}/${d.getDate()} (${WEEK[d.getDay()]})</div>` +
+      line('목표', t.goal) + line('명언', t.quote) + line('키워드', t.keyword) + `</div>`;
+  }).join('');
+
+  // 호흡: 횟수(칸), 3회 채운 날
+  let brCount = 0, brFull = 0;
   const brCal = [];
   // 달력은 기록 없는 날도 포함한 기간 전체 날짜로 그림
   const today0 = new Date();
@@ -954,13 +1067,11 @@ function renderSummary() {
     const n = d.breath || 0;
     brCount += n;
     if (n >= BREATH_MAX) brFull++;
-    toArr(d.breathLog).forEach(l => { brSec += l.sec || 0; });
     let dots = '';
     for (let i = 0; i < BREATH_MAX; i++) dots += `<i class="${i < n ? 'on' : ''}"></i>`;
     brCal.push(`<div class="br-day">${fromKey(k).getDate()}<div class="br-dots">${dots}</div></div>`);
   });
   document.getElementById('s-br-count').textContent = brCount;
-  document.getElementById('s-br-min').textContent = Math.round(brSec / 60);
   document.getElementById('s-br-full').textContent = brFull;
   document.getElementById('s-br-cal').innerHTML = brCal.join('');
 
@@ -1009,14 +1120,26 @@ function rankRow(text, cnt) {
 function emptyMini(msg) { return `<div class="empty-state" style="padding:0.75rem">${msg}</div>`; }
 
 // ── Breathing ──
-// 날숨 10초 → 들숨 4초 → 정지 2초 (날숨부터 시작)
+// 날숨 → 들숨 → 멈춤 (날숨부터 시작). 초는 설정에서 바꿀 수 있음 (기본 10/4/1)
 const BREATH_PHASES = [
-  { label: '내쉬기', guide: '입으로 천천히 내쉬세요 (10초)', sec: 10, scale: 1,   bg: 'var(--accent-light)', beep: true },
-  { label: '들이쉬기', guide: '코로 들이쉬세요 (4초)',       sec: 4,  scale: 1.5, bg: '#daeef6',            beep: true },
-  { label: '멈춤',   guide: '잠시 멈추세요 (2초)',          sec: 2,  scale: 1.5, bg: '#daeef6',            beep: false },
+  { key: 'out',  label: '내쉬기',   guide: s => `입으로 천천히 내쉬세요 (${s}초)`, sec: 10, min: 1, scale: 1,   bg: 'var(--accent-light)', beep: true },
+  { key: 'in',   label: '들이쉬기', guide: s => `코로 들이쉬세요 (${s}초)`,       sec: 4,  min: 1, scale: 1.5, bg: '#daeef6',            beep: true },
+  { key: 'hold', label: '멈춤',     guide: s => `잠시 멈추세요 (${s}초)`,          sec: 1,  min: 0, scale: 1.5, bg: '#daeef6',            beep: false },
 ];
 const BREATH_MAX = 3;
-const CYCLE_SEC = BREATH_PHASES.reduce((s, ph) => s + ph.sec, 0); // 16초
+let CYCLE_SEC = 15;
+// 입력칸에서 단계별 초를 읽어 적용·저장
+function readBreathSecs() {
+  BREATH_PHASES.forEach(ph => {
+    const el = document.getElementById('breathe-sec-' + ph.key);
+    let v = parseInt(el.value, 10);
+    if (!(v >= ph.min)) v = ph.min;
+    v = Math.min(v, 60);
+    el.value = v; ph.sec = v;
+    try { localStorage.setItem('breatheSec:' + ph.key, String(v)); } catch (e) {}
+  });
+  CYCLE_SEC = BREATH_PHASES.reduce((s, ph) => s + ph.sec, 0);
+}
 let bTimer = null, bStart = 0, bTotalSec = 0, bSec = 0, bDay = null;
 
 // ── 소리: 'beep'(전환음) | 'off' ──
@@ -1074,6 +1197,7 @@ function startBreathe() {
   min = Math.min(min, 120);
   inp.value = min;
   try { localStorage.setItem('breatheMin', String(min)); } catch (e) {}
+  readBreathSecs();
   unlockAudio();
   // 설정 시간을 채우는 온전한 사이클 수만큼 진행 (마지막 호흡이 잘리지 않음)
   bTotalSec = Math.ceil(min * 60 / CYCLE_SEC) * CYCLE_SEC;
@@ -1083,6 +1207,7 @@ function startBreathe() {
   document.getElementById('btn-start').style.display = 'none';
   document.getElementById('btn-stop').style.display = '';
   document.getElementById('breathe-min-row').style.display = 'none';
+  document.getElementById('breathe-sec-row').style.display = 'none';
   document.getElementById('breathe-counter').style.display = '';
   // 날숨은 커진 상태에서 줄어들며 시작
   const circle = document.getElementById('breathe-circle');
@@ -1108,7 +1233,7 @@ function breatheTick() {
     circle.style.transition = `transform ${ph.sec}s ease-in-out, background ${ph.sec}s ease-in-out`;
     circle.style.transform = `scale(${ph.scale})`;
     circle.style.background = ph.bg;
-    document.getElementById('breathe-guide').textContent = ph.guide;
+    document.getElementById('breathe-guide').textContent = ph.guide(ph.sec);
     if (soundMode === 'beep' && ph.beep) playTtak();
   }
   circle.textContent = `${ph.label} ${n}`;
@@ -1121,7 +1246,6 @@ function finishBreathe() {
   stopBreathe();
   const day = getDay(k);
   day.breath = Math.min(BREATH_MAX, (day.breath || 0) + 1);
-  day.breathLog = toArr(day.breathLog).concat({ sec: bTotalSec, at: Date.now() });
   setDay(k, day);
   renderBreathSlots();
   document.getElementById('breathe-circle').textContent = '완료';
@@ -1151,11 +1275,17 @@ function toggleBreathSlot(i) {
   renderBreathSlots();
 }
 try { const m = localStorage.getItem('breatheMin'); if (m) document.getElementById('breathe-min').value = m; } catch (e) {}
+BREATH_PHASES.forEach(ph => {
+  let v = null;
+  try { v = localStorage.getItem('breatheSec:' + ph.key); } catch (e) {}
+  document.getElementById('breathe-sec-' + ph.key).value = v != null ? v : ph.sec;
+});
 document.getElementById('breathe-sound-toggle').checked = soundMode === 'beep';
 
 function stopBreathe() {
   if (bTimer) { clearTimeout(bTimer); bTimer = null; }
   document.getElementById('breathe-min-row').style.display = '';
+  document.getElementById('breathe-sec-row').style.display = '';
   const circle = document.getElementById('breathe-circle');
   circle.textContent = '준비';
   circle.style.transform = 'scale(1)';
@@ -1709,9 +1839,394 @@ setInterval(checkWorkHours, 60000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) checkWorkHours(); });
 renderDay(); // Firebase 응답 전에 즉시 UI 표시
 
+// ── 노트 (날짜 구분 없는 메모) ──
+// notes/{id} : { title, html, createdAt, updatedAt }
+let notesStore = {}, curNoteId = null, noteSaveTimer = null, noteDirty = false;
+
+// 저장된 HTML은 허용한 태그만 남기고 속성은 모두 제거
+const NOTE_TAGS = new Set(['P','DIV','BR','UL','OL','LI','H2','H3','B','STRONG','I','EM','U','S','BLOCKQUOTE','PRE','CODE','HR']);
+function sanitizeNote(html) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html || '';
+  (function clean(node) {
+    [...node.childNodes].forEach(c => {
+      if (c.nodeType === 3) return;
+      if (c.nodeType !== 1 || ['SCRIPT','STYLE','IFRAME','OBJECT'].includes(c.tagName)) { c.remove(); return; }
+      clean(c);
+      if (!NOTE_TAGS.has(c.tagName)) { c.replaceWith(...c.childNodes); return; }
+      [...c.attributes].forEach(a => c.removeAttribute(a.name));
+    });
+  })(tpl.content);
+  return tpl.innerHTML;
+}
+function noteText(html) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = (html || '').replace(/<\/(p|div|li|h2|h3)>|<br>/g, ' $&');
+  return tpl.content.textContent.replace(/\s+/g, ' ').trim();
+}
+function fmtNoteDate(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return toKey(d) === todayKey() ? `오늘 ${p(d.getHours())}:${p(d.getMinutes())}` : `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`;
+}
+
+function renderNotesList() {
+  const list = document.getElementById('notes-list');
+  const notes = Object.entries(notesStore).sort((a, b) => (b[1].updatedAt || 0) - (a[1].updatedAt || 0));
+  document.getElementById('notes-empty').style.display = notes.length ? 'none' : '';
+  list.innerHTML = notes.map(([id, n]) => {
+    const text = noteText(n.html);
+    return `<button class="note-row" onclick="openNote('${id}')">` +
+      `<div class="nt">${esc(n.title || text.slice(0, 40) || '제목 없음')}</div>` +
+      (n.title && text ? `<div class="np">${esc(text.slice(0, 100))}</div>` : '') +
+      `<div class="nd">${fmtNoteDate(n.updatedAt)}</div></button>`;
+  }).join('');
+}
+
+function newNote() {
+  const id = db.ref('notes').push().key;
+  const now = Date.now();
+  notesStore[id] = { title: '', html: '', createdAt: now, updatedAt: now };
+  openNote(id, true);
+}
+function openNote(id, focusTitle) {
+  curNoteId = id;
+  const n = notesStore[id] || {};
+  document.getElementById('note-title').value = n.title || '';
+  document.getElementById('note-body').innerHTML = sanitizeNote(n.html);
+  document.getElementById('note-status').textContent = '';
+  document.getElementById('notes-list-view').style.display = 'none';
+  document.getElementById('note-edit-view').style.display = '';
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  if (focusTitle) document.getElementById('note-title').focus();
+}
+function closeNote() {
+  flushNoteSave();
+  const id = curNoteId;
+  curNoteId = null;
+  // 아무것도 안 적은 노트는 지움
+  if (id) {
+    const n = notesStore[id];
+    if (n && !(n.title || '').trim() && !noteText(n.html)) {
+      delete notesStore[id];
+      db.ref('notes/' + id).remove();
+    }
+  }
+  document.getElementById('note-edit-view').style.display = 'none';
+  document.getElementById('notes-list-view').style.display = '';
+  renderNotesList();
+}
+function deleteNote() {
+  if (!curNoteId || !confirm('이 노트를 삭제할까요?')) return;
+  const id = curNoteId;
+  clearTimeout(noteSaveTimer); noteDirty = false;
+  delete notesStore[id];
+  db.ref('notes/' + id).remove();
+  curNoteId = null;
+  closeNote();
+}
+
+function scheduleNoteSave() {
+  noteDirty = true;
+  document.getElementById('note-status').textContent = '저장 중…';
+  clearTimeout(noteSaveTimer);
+  noteSaveTimer = setTimeout(flushNoteSave, 600);
+}
+function flushNoteSave() {
+  clearTimeout(noteSaveTimer);
+  if (!noteDirty || !curNoteId) return;
+  noteDirty = false;
+  const id = curNoteId;
+  const prev = notesStore[id] || {};
+  const n = {
+    title: document.getElementById('note-title').value,
+    html: sanitizeNote(document.getElementById('note-body').innerHTML),
+    createdAt: prev.createdAt || Date.now(),
+    updatedAt: Date.now(),
+  };
+  notesStore[id] = n;
+  const status = document.getElementById('note-status');
+  db.ref('notes/' + id).set(n)
+    .then(() => { if (curNoteId === id && !noteDirty) status.textContent = '저장됨'; })
+    .catch(err => { status.textContent = '저장 실패'; console.error('노트 저장 오류:', err && err.code); });
+}
+
+// 커서가 있는 줄(블록)과 그 앞 텍스트
+function noteCaretBlock() {
+  const sel = window.getSelection();
+  if (!sel.rangeCount || !sel.isCollapsed) return null;
+  const body = document.getElementById('note-body');
+  const node = sel.anchorNode;
+  if (!body.contains(node)) return null;
+  let block = node.nodeType === 1 ? node : node.parentNode;
+  while (block !== body && !/^(P|DIV|LI|H2|H3|BLOCKQUOTE|PRE)$/.test(block.tagName)) block = block.parentNode;
+  return { sel, node, offset: sel.anchorOffset, block, body };
+}
+
+// 커서가 있는 줄의 시작 지점 (본문에 바로 놓인 글자면 그 덩어리 앞)
+function lineStartRange(c) {
+  const r = document.createRange();
+  if (c.block === c.body) {
+    let top = c.node;
+    while (top.parentNode !== c.body) top = top.parentNode;
+    r.setStartBefore(top);
+  } else {
+    r.setStart(c.block, 0);
+  }
+  r.setEnd(c.node, c.offset);
+  return r;
+}
+function lineBeforeCaret(c) { return lineStartRange(c).toString(); }
+function deleteLineBeforeCaret(c) {
+  const r = lineStartRange(c);
+  r.deleteContents();
+  c.sel.removeAllRanges();
+  // 지운 뒤에도 커서가 원래 글자 덩어리 안에 있도록
+  if (c.node.nodeType === 3 && c.node.isConnected) c.sel.collapse(c.node, 0);
+  else c.sel.addRange(r);
+}
+
+// 커서가 있는 줄을 tag(p/h2/h3/pre)로 바꿈. 커서 위치는 유지
+function setBlock(tag) {
+  let c = noteCaretBlock();
+  if (!c) return;
+  if (c.block.tagName === 'LI') {
+    // 목록 안이면 먼저 목록을 풀고 다시 잡음
+    document.execCommand(c.block.parentNode.tagName === 'OL' ? 'insertOrderedList' : 'insertUnorderedList');
+    c = noteCaretBlock();
+    if (!c) return;
+  }
+  const { node, offset, body } = c;
+  const el = document.createElement(tag);
+  if (node === body) {
+    // 빈 본문 등 커서가 본문 자체에 있을 때
+    body.insertBefore(el, body.childNodes[offset] || null);
+  } else if (c.block === body) {
+    let top = node;
+    while (top.parentNode !== body) top = top.parentNode;
+    body.insertBefore(el, top);
+    el.appendChild(top);
+  } else {
+    while (c.block.firstChild) el.appendChild(c.block.firstChild);
+    c.block.replaceWith(el);
+  }
+  if (!el.textContent) { el.innerHTML = ''; el.appendChild(document.createElement('br')); }
+  const sel = window.getSelection();
+  if (el.contains(node) && node.nodeType === 3) sel.collapse(node, Math.min(offset, node.length));
+  else sel.collapse(el, 0);
+  // 코드 블록 뒤에는 이어 쓸 줄이 있게
+  if (tag === 'pre' && !el.nextSibling) {
+    const pEl = document.createElement('p');
+    pEl.appendChild(document.createElement('br'));
+    el.after(pEl);
+  }
+  scheduleNoteSave();
+}
+function listCmd(cmd) {
+  const c = noteCaretBlock();
+  const want = cmd === 'insertOrderedList' ? 'OL' : 'UL';
+  if (c && c.block.tagName === 'LI' && c.block.parentNode.tagName === want) return;
+  if (c && /^(H2|H3|PRE)$/.test(c.block.tagName)) setBlock('p');
+  document.execCommand(cmd);
+  scheduleNoteSave();
+}
+function insertHr() {
+  document.execCommand('insertHorizontalRule');
+  scheduleNoteSave();
+}
+
+// ── "/" 명령 메뉴 ──
+const SLASH_ITEMS = [
+  { icon: '¶',  label: '본문',        keys: ['text', 'p', '본문', '텍스트'],          run: () => setBlock('p') },
+  { icon: 'H',  label: '제목',        keys: ['h1', 'heading', 'title', '제목'],       run: () => setBlock('h2') },
+  { icon: 'h',  label: '소제목',      keys: ['h2', 'subheading', '소제목'],           run: () => setBlock('h3') },
+  { icon: '•',  label: '글머리 목록', keys: ['list', 'bullet', 'ul', '글머리', '목록'], run: () => listCmd('insertUnorderedList') },
+  { icon: '1.', label: '번호 목록',   keys: ['number', 'ol', '번호'],                 run: () => listCmd('insertOrderedList') },
+  { icon: '</>', label: '코드',       keys: ['code', 'pre', '코드'],                  run: () => setBlock('pre') },
+  { icon: '—',  label: '구분선',      keys: ['divider', 'hr', 'line', '구분선', '선'], run: () => insertHr() },
+];
+const slash = { open: false, items: [], idx: 0, node: null, offset: 0 };
+
+function updateSlashMenu() {
+  const c = noteCaretBlock();
+  const m = c && c.node.nodeType === 3 && c.block.tagName !== 'PRE' && lineBeforeCaret(c).match(/^\/([^\s/]*)$/);
+  if (!m) { hideSlashMenu(); return; }
+  const q = m[1].toLowerCase();
+  const items = SLASH_ITEMS.filter(it => !q || it.label.includes(q) || it.keys.some(k => k.startsWith(q)));
+  if (!items.length) { hideSlashMenu(); return; }
+  if (!slash.open || slash.q !== q) slash.idx = 0;
+  Object.assign(slash, { open: true, items, q, node: c.node, offset: c.offset });
+  renderSlashMenu();
+  // 커서 바로 아래에 띄움
+  const menu = document.getElementById('slash-menu');
+  const r = c.sel.getRangeAt(0).getBoundingClientRect();
+  const rect = (r.width || r.height) ? r : (c.block === c.body ? c.node.parentNode : c.block).getBoundingClientRect();
+  const w = menu.offsetWidth, h = menu.offsetHeight;
+  let top = rect.bottom + 6;
+  if (top + h > window.innerHeight - 8) top = Math.max(8, rect.top - h - 6);
+  menu.style.top = top + 'px';
+  menu.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - w - 8)) + 'px';
+}
+function renderSlashMenu() {
+  const menu = document.getElementById('slash-menu');
+  menu.innerHTML = slash.items.map((it, i) =>
+    `<button type="button" class="${i === slash.idx ? 'on' : ''}" onmousedown="event.preventDefault()" onclick="pickSlash(${i})">` +
+    `<span class="si">${esc(it.icon)}</span>${esc(it.label)}</button>`).join('');
+  menu.style.display = 'block';
+  const on = menu.querySelector('.on');
+  if (on) on.scrollIntoView({ block: 'nearest' });
+}
+function hideSlashMenu() {
+  slash.open = false;
+  document.getElementById('slash-menu').style.display = 'none';
+}
+function pickSlash(i) {
+  const it = slash.items[i];
+  if (!it) return;
+  const body = document.getElementById('note-body');
+  body.focus();
+  // 메뉴를 누르는 사이 커서가 빠졌을 수 있어 기억해 둔 위치로 되돌림
+  if (slash.node && body.contains(slash.node)) window.getSelection().collapse(slash.node, Math.min(slash.offset, slash.node.length));
+  hideSlashMenu();
+  const c = noteCaretBlock();
+  if (c) deleteLineBeforeCaret(c);
+  it.run();
+}
+
+(function initNoteEditor() {
+  const body = document.getElementById('note-body');
+  const title = document.getElementById('note-title');
+  try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) {}
+
+  title.addEventListener('input', scheduleNoteSave);
+  title.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); body.focus(); }
+  });
+
+  // 줄 맨 앞 마크다운 단축키: "- " "* " "1. " "# " "## " "``` "
+  body.addEventListener('input', e => {
+    if (e.inputType === 'insertText' && e.data === ' ') {
+      const c = noteCaretBlock();
+      if (c && c.node.nodeType === 3 && c.block.tagName !== 'PRE') {
+        const before = lineBeforeCaret(c).replace(/ /g, ' ');
+        const run = /^[-*] $/.test(before) ? () => listCmd('insertUnorderedList')
+          : /^1\. $/.test(before) ? () => listCmd('insertOrderedList')
+          : before === '# ' ? () => setBlock('h2')
+          : before === '## ' ? () => setBlock('h3')
+          : before === '``` ' ? () => setBlock('pre')
+          : null;
+        if (run) { deleteLineBeforeCaret(c); run(); }
+      }
+    }
+    updateSlashMenu();
+    scheduleNoteSave();
+  });
+
+  body.addEventListener('keydown', e => {
+    // "/" 메뉴가 열려 있으면 방향키·Enter·Esc는 메뉴가 받음
+    if (slash.open && !e.isComposing) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const n = slash.items.length;
+        slash.idx = (slash.idx + (e.key === 'ArrowDown' ? 1 : n - 1)) % n;
+        renderSlashMenu();
+        return;
+      }
+      if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pickSlash(slash.idx); return; }
+      if (e.key === 'Escape') { e.preventDefault(); hideSlashMenu(); return; }
+    }
+    if (e.isComposing) return;
+    const c = noteCaretBlock();
+    const inPre = c && c.block.tagName === 'PRE';
+
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (inPre) document.execCommand('insertText', false, '  ');   // 코드: 공백 2칸
+      else document.execCommand(e.shiftKey ? 'outdent' : 'indent'); // 목록: 들여쓰기/내어쓰기
+      scheduleNoteSave();
+      return;
+    }
+    // 코드 블록: Enter는 줄바꿈, 끝에서 빈 줄에 한 번 더 Enter면 코드 블록 밖으로
+    if (e.key === 'Enter' && inPre && !e.shiftKey) {
+      e.preventDefault();
+      const pre = c.block;
+      const after = c.sel.getRangeAt(0).cloneRange();
+      after.setEndAfter(pre.lastChild || pre);
+      const atEnd = after.toString() === '';
+      // 커서가 있는 줄이 비었는지 (커서 바로 앞이 줄바꿈이거나 블록 맨 앞)
+      const before = c.sel.getRangeAt(0).cloneRange();
+      before.setStart(pre, 0);
+      let last = before.cloneContents().lastChild;
+      while (last && last.nodeType === 3 && last.data === '') last = last.previousSibling;
+      const emptyLine = !last || last.nodeName === 'BR';
+      if (atEnd && emptyLine) {
+        const isBlank = n => n && (n.nodeName === 'BR' || (n.nodeType === 3 && n.data === ''));
+        while (isBlank(pre.lastChild)) pre.lastChild.remove();
+        if (!pre.firstChild) pre.appendChild(document.createElement('br'));
+        // 바로 뒤에 빈 줄이 있으면 그 줄로, 없으면 새 줄을 만들어 이동
+        let pEl = pre.nextElementSibling;
+        if (!(pEl && pEl.tagName === 'P' && !pEl.textContent)) {
+          pEl = document.createElement('p');
+          pEl.appendChild(document.createElement('br'));
+          pre.after(pEl);
+        }
+        c.sel.collapse(pEl, 0);
+      } else {
+        document.execCommand('insertLineBreak');
+      }
+      scheduleNoteSave();
+      return;
+    }
+    // 제목/코드 줄 맨 앞에서 Backspace → 일반 줄로
+    if (e.key === 'Backspace' && c && /^(H2|H3|PRE)$/.test(c.block.tagName) && lineBeforeCaret(c) === '') {
+      e.preventDefault();
+      setBlock('p');
+      scheduleNoteSave();
+    }
+  });
+
+  body.addEventListener('blur', () => setTimeout(hideSlashMenu, 150));
+  body.addEventListener('click', updateSlashMenu);
+
+  // 붙여넣기는 서식 없이 텍스트만
+  body.addEventListener('paste', e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, text);
+  });
+
+  body.addEventListener('blur', flushNoteSave);
+  title.addEventListener('blur', flushNoteSave);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) flushNoteSave(); });
+  window.addEventListener('pagehide', flushNoteSave);
+})();
+
+db.ref('notes').on('value',
+  snapshot => {
+    const remote = snapshot.val() || {};
+    // 지금 편집 중인 노트는 로컬 내용을 우선
+    if (curNoteId && notesStore[curNoteId] && !remote[curNoteId]) remote[curNoteId] = notesStore[curNoteId];
+    notesStore = remote;
+    if (TAB_SECTIONS[curTab] !== 'notes') return;
+    if (!curNoteId) { renderNotesList(); return; }
+    // 다른 기기에서 바뀐 내용은 편집 중이 아닐 때만 반영
+    const editing = ['note-title', 'note-body'].includes(document.activeElement && document.activeElement.id);
+    if (!editing && !noteDirty) {
+      const n = notesStore[curNoteId];
+      document.getElementById('note-title').value = n.title || '';
+      document.getElementById('note-body').innerHTML = sanitizeNote(n.html);
+    }
+  },
+  err => console.error('노트 불러오기 오류:', err.code)
+);
+
 db.ref('days').on('value',
   snapshot => {
     store = snapshot.val() || {};
+    // 없앤 항목(내일 딱 하나, 호흡 시간) 데이터 정리
+    Object.keys(store).forEach(k => {
+      ['one', 'breathLog'].forEach(f => { if (store[k] && store[k][f] !== undefined) db.ref(`days/${k}/${f}`).remove(); });
+    });
     const active = document.activeElement;
     const isTyping = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
     if (!isTyping && !drag) {
